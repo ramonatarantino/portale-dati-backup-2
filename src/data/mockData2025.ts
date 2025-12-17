@@ -1,0 +1,201 @@
+import { AggregatedByProvince, DataRecord, createMonthYearKey } from '@/types/data';
+import { sampleProvinceData } from './sampleProvinceData';
+
+// Capoluoghi regionali (una provincia per regione)
+export const regionalCapitals: Record<string, string> = {
+  'PIEMONTE': 'TORINO',
+  'VALLE D\'AOSTA': 'AOSTA',
+  'LOMBARDIA': 'MILANO',
+  'TRENTINO-ALTO ADIGE': 'TRENTO',
+  'VENETO': 'VENEZIA',
+  'FRIULI-VENEZIA GIULIA': 'TRIESTE',
+  'LIGURIA': 'GENOVA',
+  'EMILIA-ROMAGNA': 'BOLOGNA',
+  'TOSCANA': 'FIRENZE',
+  'UMBRIA': 'PERUGIA',
+  'MARCHE': 'ANCONA',
+  'LAZIO': 'ROMA',
+  'ABRUZZO': 'L\'AQUILA',
+  'MOLISE': 'CAMPOBASSO',
+  'CAMPANIA': 'NAPOLI',
+  'PUGLIA': 'BARI',
+  'BASILICATA': 'POTENZA',
+  'CALABRIA': 'CATANZARO',
+  'SICILIA': 'PALERMO',
+  'SARDEGNA': 'CAGLIARI',
+};
+
+// Generate variation for mock data
+function applyVariation(base: number, month: number): number {
+  const seasonalFactor = 1 + Math.sin((month - 1) * Math.PI / 6) * 0.08;
+  const randomFactor = 0.95 + Math.random() * 0.1;
+  return Math.round(base * seasonalFactor * randomFactor);
+}
+
+// Generate province data for a specific month in 2025
+export function getProvinceDataForMonth(year: number, month: number): AggregatedByProvince[] {
+  return sampleProvinceData.map(p => ({
+    ...p,
+    totale: applyVariation(p.totale, month),
+    maschi: applyVariation(p.maschi, month),
+    femmine: applyVariation(p.femmine, month),
+  }));
+}
+
+// Mock data for all datasets by month for 2025
+export interface MockMonthData {
+  distribuzione: AggregatedByProvince[];
+  accessi: AccessiMockData;
+  attivazioni: AttivazioniMockData;
+  spesa: SpesaMockData;
+}
+
+export interface AccessiMockData {
+  totaleAccessi: number;
+  mediaGiornaliera: number;
+  entiAttivi: number;
+  credenzialiUsate: number;
+  trendMensile: { mese: string; accessi: number }[];
+  perCredenziale: { credenziale: string; numero: number }[];
+  topEnti: { ente: string; accessi: number }[];
+}
+
+export interface AttivazioniMockData {
+  totaleAttivazioni: number;
+  totaleCessazioni: number;
+  saldo: number;
+  trendMensile: { mese: string; attivazioni: number; cessazioni: number }[];
+  perRegione: { regione: string; attivazioni: number; cessazioni: number }[];
+}
+
+export interface SpesaMockData {
+  spesaTotale: number;
+  mediaMensile: number;
+  dipendenti: number;
+  spesaProCapite: number;
+  trendMensile: { mese: string; spesa: number }[];
+  perCategoria: { categoria: string; spesa: number }[];
+  topAmministrazioni: { amministrazione: string; spesa: number }[];
+}
+
+const MONTH_NAMES = ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'];
+
+function generateAccessiData(month: number): AccessiMockData {
+  const baseAccessi = 850000 + month * 15000;
+  const variation = () => 0.9 + Math.random() * 0.2;
+  
+  return {
+    totaleAccessi: Math.round(baseAccessi * variation()),
+    mediaGiornaliera: Math.round((baseAccessi / 30) * variation()),
+    entiAttivi: Math.round(1250 * variation()),
+    credenzialiUsate: Math.round(4 + Math.random() * 2),
+    trendMensile: MONTH_NAMES.slice(0, month).map((mese, i) => ({
+      mese,
+      accessi: Math.round((750000 + i * 20000) * variation())
+    })),
+    perCredenziale: [
+      { credenziale: 'SPID', numero: Math.round(450000 * variation()) },
+      { credenziale: 'CIE', numero: Math.round(280000 * variation()) },
+      { credenziale: 'CNS', numero: Math.round(85000 * variation()) },
+      { credenziale: 'Credenziali Interne', numero: Math.round(35000 * variation()) },
+    ],
+    topEnti: [
+      { ente: 'Ministero Istruzione', accessi: Math.round(125000 * variation()) },
+      { ente: 'Ministero Interno', accessi: Math.round(98000 * variation()) },
+      { ente: 'Agenzia Entrate', accessi: Math.round(87000 * variation()) },
+      { ente: 'INPS', accessi: Math.round(76000 * variation()) },
+      { ente: 'Ministero Giustizia', accessi: Math.round(65000 * variation()) },
+    ]
+  };
+}
+
+function generateAttivazioniData(month: number): AttivazioniMockData {
+  const baseAttivazioni = 12000 + month * 800;
+  const baseCessazioni = 8500 + month * 400;
+  const variation = () => 0.85 + Math.random() * 0.3;
+  
+  return {
+    totaleAttivazioni: Math.round(baseAttivazioni * variation()),
+    totaleCessazioni: Math.round(baseCessazioni * variation()),
+    saldo: Math.round((baseAttivazioni - baseCessazioni) * variation()),
+    trendMensile: MONTH_NAMES.slice(0, month).map((mese, i) => ({
+      mese,
+      attivazioni: Math.round((10000 + i * 500) * variation()),
+      cessazioni: Math.round((7000 + i * 300) * variation())
+    })),
+    perRegione: [
+      { regione: 'Lombardia', attivazioni: Math.round(2500 * variation()), cessazioni: Math.round(1800 * variation()) },
+      { regione: 'Lazio', attivazioni: Math.round(2200 * variation()), cessazioni: Math.round(1600 * variation()) },
+      { regione: 'Campania', attivazioni: Math.round(1800 * variation()), cessazioni: Math.round(1200 * variation()) },
+      { regione: 'Sicilia', attivazioni: Math.round(1500 * variation()), cessazioni: Math.round(1100 * variation()) },
+      { regione: 'Veneto', attivazioni: Math.round(1400 * variation()), cessazioni: Math.round(950 * variation()) },
+      { regione: 'Piemonte', attivazioni: Math.round(1200 * variation()), cessazioni: Math.round(850 * variation()) },
+      { regione: 'Emilia-Romagna', attivazioni: Math.round(1100 * variation()), cessazioni: Math.round(780 * variation()) },
+      { regione: 'Toscana', attivazioni: Math.round(950 * variation()), cessazioni: Math.round(680 * variation()) },
+    ]
+  };
+}
+
+function generateSpesaData(month: number): SpesaMockData {
+  const baseSpesa = 4200000000 + month * 150000000;
+  const variation = () => 0.92 + Math.random() * 0.16;
+  
+  return {
+    spesaTotale: Math.round(baseSpesa * variation()),
+    mediaMensile: Math.round((baseSpesa / month) * variation()),
+    dipendenti: Math.round(3250000 * variation()),
+    spesaProCapite: Math.round(1290 * variation()),
+    trendMensile: MONTH_NAMES.slice(0, month).map((mese, i) => ({
+      mese,
+      spesa: Math.round((380000000 + i * 12000000) * variation())
+    })),
+    perCategoria: [
+      { categoria: 'Stipendi Base', spesa: Math.round(2800000000 * variation()) },
+      { categoria: 'Indennità', spesa: Math.round(650000000 * variation()) },
+      { categoria: 'Straordinari', spesa: Math.round(280000000 * variation()) },
+      { categoria: 'TFR', spesa: Math.round(320000000 * variation()) },
+      { categoria: 'Contributi', spesa: Math.round(150000000 * variation()) },
+    ],
+    topAmministrazioni: [
+      { amministrazione: 'Ministero Istruzione', spesa: Math.round(1200000000 * variation()) },
+      { amministrazione: 'Ministero Interno', spesa: Math.round(850000000 * variation()) },
+      { amministrazione: 'Ministero Difesa', spesa: Math.round(720000000 * variation()) },
+      { amministrazione: 'Ministero Giustizia', spesa: Math.round(580000000 * variation()) },
+      { amministrazione: 'Agenzia Entrate', spesa: Math.round(450000000 * variation()) },
+    ]
+  };
+}
+
+// Generate complete mock data for a month
+export function getMockDataForMonth(year: number, month: number): MockMonthData {
+  return {
+    distribuzione: getProvinceDataForMonth(year, month),
+    accessi: generateAccessiData(month),
+    attivazioni: generateAttivazioniData(month),
+    spesa: generateSpesaData(month),
+  };
+}
+
+// Pre-generated data for all months of 2025
+export const mockData2025: Record<string, MockMonthData> = {};
+
+for (let month = 1; month <= 12; month++) {
+  const key = createMonthYearKey(2025, month);
+  mockData2025[key] = getMockDataForMonth(2025, month);
+}
+
+// Also add some 2024 data for comparison
+for (let month = 1; month <= 12; month++) {
+  const key = createMonthYearKey(2024, month);
+  mockData2025[key] = getMockDataForMonth(2024, month);
+}
+
+// Export a function to get data for any month/year
+export function getDataForPeriod(year: number, month: number): MockMonthData {
+  const key = createMonthYearKey(year, month);
+  if (mockData2025[key]) {
+    return mockData2025[key];
+  }
+  // Generate on-the-fly if not pre-cached
+  return getMockDataForMonth(year, month);
+}

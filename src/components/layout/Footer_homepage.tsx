@@ -1,0 +1,132 @@
+import { ExternalLink, Mail, Phone, MapPin } from "lucide-react";
+
+const Footer = () => {
+  return (
+    <footer className="hero-gradient text-primary-foreground">
+      <div className="container mx-auto px-4 py-12 md:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+          {/* Brand */}
+          <div className="lg:col-span-1">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-gold/20 rounded-lg flex items-center justify-center">
+                <span className="text-gold-light font-bold text-xl">N</span>
+              </div>
+              <div>
+                <h3 className="font-bold text-lg">NoiPA</h3>
+                <p className="text-xs text-primary-foreground/70">Patrimonio Informativo</p>
+              </div>
+            </div>
+            <p className="text-sm text-primary-foreground/80 mb-4">
+              Non accumuliamo dati, creiamo conoscenza condividendo informazioni.
+            </p>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="font-semibold mb-4 text-gold-light">Link Rapidi</h4>
+            <ul className="space-y-2">
+              <li>
+                <a href="#opendata" className="text-sm text-primary-foreground/80 hover:text-gold transition-colors">
+                  Open Data
+                </a>
+              </li>
+              <li>
+                <a href="#numeri" className="text-sm text-primary-foreground/80 hover:text-gold transition-colors">
+                  Numeri NoiPA
+                </a>
+              </li>
+              <li>
+                <a href="#news" className="text-sm text-primary-foreground/80 hover:text-gold transition-colors">
+                  News
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-sm text-primary-foreground/80 hover:text-gold transition-colors flex items-center gap-1">
+                  Area Personale
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Resources */}
+          <div>
+            <h4 className="font-semibold mb-4 text-gold-light">Risorse</h4>
+            <ul className="space-y-2">
+              <li>
+                <a href="#" className="text-sm text-primary-foreground/80 hover:text-gold transition-colors">
+                  Documentazione API
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-sm text-primary-foreground/80 hover:text-gold transition-colors">
+                  Catalogo Dataset
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-sm text-primary-foreground/80 hover:text-gold transition-colors">
+                  Report Statistici
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-sm text-primary-foreground/80 hover:text-gold transition-colors">
+                  FAQ
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h4 className="font-semibold mb-4 text-gold-light">Contatti</h4>
+            <ul className="space-y-3">
+              <li className="flex items-start gap-2 text-sm text-primary-foreground/80">
+                <MapPin className="h-4 w-4 mt-0.5 text-gold/70" />
+                <span>Ministero dell'Economia e delle Finanze<br />Roma, Italia</span>
+              </li>
+              <li className="flex items-center gap-2 text-sm text-primary-foreground/80">
+                <Mail className="h-4 w-4 text-gold/70" />
+                <a href="mailto:info@noipa.it" className="hover:text-gold transition-colors">
+                  info@noipa.it
+                </a>
+              </li>
+              <li className="flex items-center gap-2 text-sm text-primary-foreground/80">
+                <Phone className="h-4 w-4 text-gold/70" />
+                <span>800 991 990</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="border-t border-primary-foreground/20 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center gap-4">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Emblem_of_Italy.svg/100px-Emblem_of_Italy.svg.png"
+                alt="Repubblica Italiana"
+                className="h-10 w-auto opacity-80"
+              />
+              <div className="text-xs text-primary-foreground/60">
+                <p>Ministero dell'Economia e delle Finanze</p>
+                <p>Dipartimento dell'Amministrazione Generale</p>
+              </div>
+            </div>
+            <div className="flex flex-wrap justify-center gap-4 text-xs text-primary-foreground/60">
+              <a href="#" className="hover:text-gold transition-colors">Privacy Policy</a>
+              <span>|</span>
+              <a href="#" className="hover:text-gold transition-colors">Note Legali</a>
+              <span>|</span>
+              <a href="#" className="hover:text-gold transition-colors">Accessibilità</a>
+            </div>
+          </div>
+          <p className="text-center text-xs text-primary-foreground/50 mt-6">
+            © 2025 NoiPA - Tutti i diritti riservati
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
