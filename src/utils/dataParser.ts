@@ -19,7 +19,7 @@ export function parseCSV(csvText: string): DataRecord[] {
       amministrazione: values[headerMap['amministrazione'] || headerMap['ente'] || 1] || '',
       eta_min: parseInt(values[headerMap['eta_min'] || 2]) || 0,
       eta_max: parseInt(values[headerMap['eta_max'] || 3]) || 0,
-      sesso: (values[headerMap['sesso'] || 4] as 'F' | 'M') || 'F',
+      sesso: (values[headerMap['sesso'] || 4] as 'M' | 'F') || 'M',
       numero: parseInt(values[headerMap['numero'] || 5]) || 0,
     };
     
@@ -118,7 +118,7 @@ export function aggregateByAdmin(data: DataRecord[]): AggregatedByAdmin[] {
 export function getUniqueValues(data: DataRecord[]) {
   const province = [...new Set(data.map(d => d.provincia_di_residenza))].sort();
   const amministrazioni = [...new Set(data.map(d => d.amministrazione))].sort();
-  const sesso = [...new Set(data.map(d => d.sesso))] as ('F' | 'M')[];
+  const sesso = [...new Set(data.map(d => d.sesso))] as ('M' | 'F')[];
   const fasce = [...new Set(data.map(d => getAgeFascia(d.eta_min, d.eta_max)))].sort((a, b) => {
     const aMin = parseInt(a.split('-')[0]);
     const bMin = parseInt(b.split('-')[0]);

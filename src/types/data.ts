@@ -3,7 +3,7 @@ export interface DataRecord {
   amministrazione: string;
   eta_min: number;
   eta_max: number;
-  sesso: 'F' | 'M';
+  sesso: 'M' | 'F';
   numero: number;
   anno?: number;
   mese?: number;
@@ -38,7 +38,7 @@ export interface SpesaRetribuzioniRecord {
 export interface AccessiRecord {
   regione: string;
   ente: string;
-  sesso: 'F' | 'M';
+  sesso: 'M' | 'F';
   eta_min: number;
   eta_max: number;
   credenziale_usata: string;

@@ -125,7 +125,7 @@ export function DataTable({ data }: DataTableProps) {
                   onClick={() => handleSort('sesso')}
                 >
                   <div className="flex items-center justify-center gap-1">
-                    Sesso
+                    Genere
                     <SortIcon columnKey="sesso" />
                   </div>
                 </TableHead>
@@ -159,7 +159,7 @@ export function DataTable({ data }: DataTableProps) {
                           : "bg-pink-500/20 text-pink-600"
                       )}
                     >
-                      {item.sesso}
+                      {item.sesso === 'M' ? 'U' : 'D'}
                     </span>
                   </TableCell>
                   <TableCell className="text-right font-mono">
