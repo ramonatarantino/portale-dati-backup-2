@@ -12,6 +12,7 @@ import {
   getProvincesByRegion,
   ProvinceCoords
 } from '@/data/provinceCoordinates';
+import { getComuniByProvince } from '@/data/comuniCoordinates';
 import { regionalCapitals } from '@/data/mockData2025';
 
 interface InteractiveItalyMapProps {
@@ -20,12 +21,13 @@ interface InteractiveItalyMapProps {
   selectedMonth?: number | null;
   selectedProvince?: string | null;
   regionToZoom?: string | null;
+  cityToZoom?: string | null;
   onProvinceSelect?: (province: string | null) => void;
   onRegionSelect?: (region: string) => void;
   onResetRegion?: () => void;
 }
 
-type ViewLevel = 'italy' | 'region' | 'province';
+type ViewLevel = 'italy' | 'region' | 'province' | 'city';
 
 // Colors from design system (blue/gold/white)
 const COLORS = {
@@ -42,6 +44,7 @@ export function InteractiveItalyMap({
   selectedMonth,
   selectedProvince,
   regionToZoom,
+  cityToZoom,
   onProvinceSelect,
   onRegionSelect,
   onResetRegion
@@ -119,8 +122,10 @@ export function InteractiveItalyMap({
 
     if (viewLevel === 'italy') {
       renderCapitalMarkers();
-    } else if (viewLevel === 'region' && selectedRegion) {
-      renderProvinceMarkers(selectedRegion);
+      } else if (viewLevel === 'region' && selectedRegion) {
+        renderProvinceMarkers(selectedRegion);
+      } else if (viewLevel === 'city' && selectedProvince) {
+        renderCityMarkers(selectedProvince);
     }
   }, [data, isLoaded, viewLevel, selectedRegion, dataMap, regionTotals]);
 
@@ -140,6 +145,17 @@ export function InteractiveItalyMap({
       duration: 1000
     });
   }, [regionToZoom, isLoaded]);
+
+  // Handle city selection from bar chart: zoom in province context
+  useEffect(() => {
+    if (!map.current || !isLoaded) return;
+    if (!cityToZoom || !selectedProvince) return;
+    const comuni = getComuniByProvince(selectedProvince);
+    const target = comuni.find(c => c.name.toUpperCase() === cityToZoom.toUpperCase());
+    if (!target) return;
+    setViewLevel('city');
+    map.current.flyTo({ center: target.coordinates, zoom: target.zoom, duration: 900 });
+  }, [cityToZoom, selectedProvince, isLoaded]);
 
   // Handle province selection from barchart (only in italy view)
   useEffect(() => {
@@ -227,6 +243,41 @@ export function InteractiveItalyMap({
         if (marker.getPopup()?.isOpen()) marker.togglePopup();
       });
 
+      markersRef.current.push(marker);
+    });
+  };
+
+  const renderCityMarkers = (provinceName: string) => {
+    const comuni = getComuniByProvince(provinceName);
+    comuni.forEach(com => {
+      const el = document.createElement('div');
+      el.innerHTML = `
+        <div style="
+          position: relative;
+          width: 28px;
+          height: 28px;
+          cursor: pointer;
+        ">
+          <div style="
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 22px; height: 22px;
+            background: linear-gradient(135deg, ${COLORS.gold}, ${COLORS.goldDark});
+            border: 3px solid ${COLORS.white};
+            border-radius: 50%;
+            box-shadow: 0 4px 16px ${COLORS.gold}40;
+          "></div>
+        </div>
+      `;
+      const marker = new maplibregl.Marker({ element: el })
+        .setLngLat(com.coordinates)
+        .addTo(map.current!);
+      el.addEventListener('click', () => {
+        setViewLevel('city');
+        onProvinceSelect?.(provinceName);
+        map.current?.flyTo({ center: com.coordinates, zoom: com.zoom, duration: 900 });
+      });
       markersRef.current.push(marker);
     });
   };
@@ -444,6 +495,15 @@ export function InteractiveItalyMap({
       zoom: coords.zoom + 1,
       duration: 1000
     });
+  };
+
+  const handleCitySelect = (cityName: string) => {
+    if (!selectedProvince) return;
+    const comuni = getComuniByProvince(selectedProvince);
+    const target = comuni.find(c => c.name.toUpperCase() === cityName.toUpperCase());
+    if (!target) return;
+    setViewLevel('city');
+    map.current?.flyTo({ center: target.coordinates, zoom: target.zoom, duration: 900 });
   };
 
   const handleBack = () => {

@@ -56,6 +56,7 @@ export function DistribuzioneDashboard(props: DistribuzioneDashboardProps) {
   /** 🔥 SINGLE SOURCE OF TRUTH */
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
+  const [selectedCity, setSelectedCity] = useState<string | null>(null);
 
   /** 🔥 KPI nuove assunzioni */
   const amministratiMeseCorrente = useMemo(() => {
@@ -115,12 +116,18 @@ export function DistribuzioneDashboard(props: DistribuzioneDashboardProps) {
           data={provinceData}
           selectedProvince={selectedProvince}
           selectedRegion={selectedRegion}
+          selectedCity={selectedCity}
           onRegionSelect={(region) => {
             setSelectedRegion(region);
             setSelectedProvince(null);
+            setSelectedCity(null);
           }}
           onProvinceClick={(province) => {
             setSelectedProvince(province);
+            setSelectedCity(null);
+          }}
+          onCitySelect={(city) => {
+            setSelectedCity(city);
           }}
         />
 
@@ -130,14 +137,17 @@ export function DistribuzioneDashboard(props: DistribuzioneDashboardProps) {
           selectedMonth={selectedMonth}
           selectedProvince={selectedProvince}
           regionToZoom={selectedRegion}
+          cityToZoom={selectedCity}
           onProvinceSelect={setSelectedProvince}
           onRegionSelect={(region) => {
             setSelectedRegion(region);
             setSelectedProvince(null);
+            setSelectedCity(null);
           }}
           onResetRegion={() => {
             setSelectedRegion(null);
             setSelectedProvince(null);
+            setSelectedCity(null);
           }}
         />
       </div>

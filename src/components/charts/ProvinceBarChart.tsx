@@ -11,6 +11,7 @@ import {
   Cell,
 } from 'recharts';
 import { TrendingUp } from 'lucide-react';
+import { getComuniByProvince } from '@/data/comuniCoordinates';
 import { AggregatedByProvince } from '@/types/data';
 
 interface ProvinceBarChartProps {
@@ -18,8 +19,10 @@ interface ProvinceBarChartProps {
   maxItems?: number;
   onProvinceClick?: (provincia: string) => void;
   onRegionSelect?: (regione: string) => void;
+  onCitySelect?: (comune: string) => void;
   selectedProvince?: string | null;
   selectedRegion?: string | null;
+  selectedCity?: string | null;
 }
 
 
@@ -33,7 +36,7 @@ const CHART_COLORS = [
   'hsl(210, 50%, 75%)',
 ];
 
-export function ProvinceBarChart({ data, maxItems = 15, onProvinceClick, onRegionSelect, selectedProvince, selectedRegion }: ProvinceBarChartProps) {
+export function ProvinceBarChart({ data, maxItems = 15, onProvinceClick, onRegionSelect, onCitySelect, selectedProvince, selectedRegion, selectedCity }: ProvinceBarChartProps) {
   // Build chart data: regions when none selected, provinces of selected region otherwise
   const chartData = useMemo(() => {
     if (!selectedRegion) {
@@ -56,18 +59,33 @@ export function ProvinceBarChart({ data, maxItems = 15, onProvinceClick, onRegio
         .sort((a, b) => b.totale - a.totale)
         .slice(0, maxItems);
     }
-    // Provinces within selected region
-    const provinces = data
-      .filter(p => (p.regione || '').toUpperCase() === selectedRegion.toUpperCase())
-      .map(p => ({
-        ...p,
-        name: p.provincia.length > 12 ? p.provincia.substring(0, 12) + '...' : p.provincia,
-        fullName: p.provincia,
-      }))
-      .sort((a, b) => b.totale - a.totale)
-      .slice(0, maxItems);
-    return provinces;
-  }, [data, maxItems, selectedRegion]);
+    if (!selectedProvince) {
+      // Provinces within selected region
+      const provinces = data
+        .filter(p => (p.regione || '').toUpperCase() === selectedRegion.toUpperCase())
+        .map(p => ({
+          ...p,
+          name: p.provincia.length > 12 ? p.provincia.substring(0, 12) + '...' : p.provincia,
+          fullName: p.provincia,
+        }))
+        .sort((a, b) => b.totale - a.totale)
+        .slice(0, maxItems);
+      return provinces;
+    }
+    // Comuni within selected province (synthetic split based on ratios)
+    const provinceStats = data.find(p => p.provincia.toUpperCase() === selectedProvince.toUpperCase());
+    const comuni = getComuniByProvince(selectedProvince) || [];
+    const totale = provinceStats?.totale || 0;
+    const maschi = provinceStats?.maschi || 0;
+    const femmine = provinceStats?.femmine || 0;
+    return comuni.map(c => ({
+      name: c.name.length > 14 ? c.name.substring(0, 14) + '...' : c.name,
+      fullName: c.name,
+      totale: Math.round(totale * (c.ratio ?? 0.5)),
+      maschi: Math.round(maschi * (c.ratio ?? 0.5)),
+      femmine: Math.round(femmine * (c.ratio ?? 0.5)),
+    })).sort((a, b) => b.totale - a.totale);
+  }, [data, maxItems, selectedRegion, selectedProvince]);
 
   const handleBarClick = (payload: any) => {
     if (!payload || !payload.fullName) return;
@@ -75,7 +93,11 @@ export function ProvinceBarChart({ data, maxItems = 15, onProvinceClick, onRegio
       onRegionSelect?.(payload.fullName);
       return;
     }
-    onProvinceClick?.(payload.fullName);
+    if (!selectedProvince) {
+      onProvinceClick?.(payload.fullName);
+      return;
+    }
+    onCitySelect?.(payload.fullName);
   };
 
   const formatNumber = (value: number) => {
@@ -137,13 +159,15 @@ export function ProvinceBarChart({ data, maxItems = 15, onProvinceClick, onRegio
           <div className="flex items-center gap-2 mb-1">
             <TrendingUp className="w-5 h-5 text-primary" />
             <h3 className="text-lg font-semibold">
-              {selectedRegion ? `Province di ${selectedRegion}` : 'Distribuzione per regione'}
+              {!selectedRegion && 'Distribuzione per regione'}
+              {selectedRegion && !selectedProvince && `Province di ${selectedRegion}`}
+              {selectedRegion && selectedProvince && `Comuni di ${selectedProvince}`}
             </h3>
           </div>
           <p className="text-sm text-muted-foreground">
-            {selectedRegion 
-              ? `Province della regione ${selectedRegion}` 
-              : `Top ${maxItems} regioni per numero di amministrati`}
+            {!selectedRegion && `Top ${maxItems} regioni per numero di amministrati`}
+            {selectedRegion && !selectedProvince && `Province della regione ${selectedRegion}`}
+            {selectedRegion && selectedProvince && `Comuni della provincia di ${selectedProvince}`}
           </p>
         </div>
         {selectedProvince && (
@@ -190,7 +214,7 @@ export function ProvinceBarChart({ data, maxItems = 15, onProvinceClick, onRegio
             >
               {chartData.map((item, index) => {
                 const isSelected = selectedProvince
-                  ? selectedProvince.toUpperCase() === item.fullName.toUpperCase()
+                  ? (!selectedCity && selectedProvince.toUpperCase() === item.fullName.toUpperCase())
                   : false;
                 return (
                   <Cell 
