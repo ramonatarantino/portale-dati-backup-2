@@ -84,7 +84,7 @@ export function FilterPanel({ filters, onFiltersChange, availableOptions }: Filt
         selectedCount={filters.sesso.length}
         options={['F', 'M']}
         selected={filters.sesso}
-        onToggle={(value) => updateFilter('sesso', toggleArrayValue(filters.sesso, value as 'F' | 'M'))}
+        onToggle={(value) => updateFilter('sesso', toggleArrayValue(filters.sesso, value as 'D' | 'U'))}
         displayMap={{ F: 'U', M: 'D' }}
       />
 

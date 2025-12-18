@@ -8,7 +8,7 @@ const dashboards = [
   {
     id: "opendata",
     title: "Open Data",
-    description: "Accedi alla dashboard completa dei dati aperti della Pubblica Amministrazione",
+    description: "Accedi al portale completo degli Open Data della Pubblica Amministrazione",
     icon: Database,
     color: "from-blue-900 to-blue-300",
     features: ["150+ Dataset", "Aggiornamenti mensili", "Export CSV/JSON", "API pubbliche"],
@@ -16,7 +16,7 @@ const dashboards = [
   },
   {
     id: "numeri",
-    title: "Numeri NoiPA",
+    title: "Numeri DAG",
     description: "Esplora le statistiche e i numeri del sistema NoiPA in tempo reale",
     icon: BarChart3,
     color: "from-gold-dark to-gold-light",
@@ -31,13 +31,13 @@ const DashboardTabs = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <Badge className="bg-primary/20 text-primary hover:bg-primary/30 mb-4">
-            Dashboard Interattive
+            Portali Interattivi
           </Badge>
           <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-4">
-            Accedi alle Dashboard
+            Esplora i dati in modo intelligente
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Collega le tue dashboard personalizzate per analisi approfondite dei dati NoiPA.
+            Consulta analisi interattive e percorsi di esplorazione pensati per valorizzare i dati della pubblica amministrazione.
           </p>
         </div>
 
@@ -74,7 +74,7 @@ const DashboardTabs = () => {
                   className="w-full group/btn bg-primary hover:bg-primary-dark"
                   onClick={() => window.location.href = dashboard.link}
                 >
-                  Apri Dashboard
+                  Clicca per esplorare
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
                 </Button>
               </CardContent>

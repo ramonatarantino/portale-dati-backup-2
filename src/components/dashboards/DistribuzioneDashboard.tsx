@@ -112,17 +112,15 @@ export function DistribuzioneDashboard(props: DistribuzioneDashboardProps) {
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <ProvinceBarChart
-          data={barChartData}
+          data={provinceData}
           selectedProvince={selectedProvince}
           selectedRegion={selectedRegion}
+          onRegionSelect={(region) => {
+            setSelectedRegion(region);
+            setSelectedProvince(null);
+          }}
           onProvinceClick={(province) => {
             setSelectedProvince(province);
-            // Se siamo nella vista Italia (senza regione selezionata), 
-            // facciamo zoom sulla provincia nella mappa
-            if (!selectedRegion) {
-              // Qui possiamo notificare la mappa per fare zoom sulla provincia
-              // Per ora impostiamo solo la provincia selezionata
-            }
           }}
         />
 
@@ -131,6 +129,7 @@ export function DistribuzioneDashboard(props: DistribuzioneDashboardProps) {
           selectedYear={selectedYear}
           selectedMonth={selectedMonth}
           selectedProvince={selectedProvince}
+          regionToZoom={selectedRegion}
           onProvinceSelect={setSelectedProvince}
           onRegionSelect={(region) => {
             setSelectedRegion(region);

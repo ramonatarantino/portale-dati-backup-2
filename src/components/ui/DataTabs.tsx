@@ -104,7 +104,7 @@ const DataTabs = () => {
                 className="flex items-center gap-2 px-6 py-3 text-sm md:text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-primary rounded-lg transition-all"
               >
                 <BarChart3 className="h-4 w-4" />
-                Numeri NoiPA
+                Numeri DAG
               </TabsTrigger>
             </TabsList>
           </div>
@@ -124,7 +124,7 @@ const DataTabs = () => {
                 onClick={() => window.location.href = '/dashboard'}
               >
                 <ExternalLink className="mr-2 h-4 w-4" />
-                Vai alla Dashboard Open Data
+                Vai al Portale Open Data
               </Button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -141,7 +141,7 @@ const DataTabs = () => {
           <TabsContent value="numeri" className="mt-0 focus-visible:outline-none">
             <div className="max-w-3xl mx-auto text-center mb-12">
               <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-4">
-                Numeri NoiPA
+                Numeri DAG
               </h2>
               <p className="text-muted-foreground text-lg mb-6">
                 Per offrire a tutti i cittadini, al di là delle competenze specifiche, 
@@ -153,7 +153,7 @@ const DataTabs = () => {
                 onClick={() => window.location.href = '/dashboard'}
               >
                 <ExternalLink className="mr-2 h-4 w-4" />
-                Vai alla Dashboard Numeri NoiPA
+                Vai al Portale Numeri DAG
               </Button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

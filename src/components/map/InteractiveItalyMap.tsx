@@ -19,6 +19,7 @@ interface InteractiveItalyMapProps {
   selectedYear?: number | null;
   selectedMonth?: number | null;
   selectedProvince?: string | null;
+  regionToZoom?: string | null;
   onProvinceSelect?: (province: string | null) => void;
   onRegionSelect?: (region: string) => void;
   onResetRegion?: () => void;
@@ -40,6 +41,7 @@ export function InteractiveItalyMap({
   selectedYear,
   selectedMonth,
   selectedProvince,
+  regionToZoom,
   onProvinceSelect,
   onRegionSelect,
   onResetRegion
@@ -50,6 +52,7 @@ export function InteractiveItalyMap({
   const [isLoaded, setIsLoaded] = useState(false);
   const [viewLevel, setViewLevel] = useState<ViewLevel>('italy');
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+  const ITALY_BOUNDS: [[number, number], [number, number]] = [[5.5, 35], [19, 48]];
 
   // Create a data map for quick lookup
   const dataMap = useMemo(() => {
@@ -95,7 +98,11 @@ export function InteractiveItalyMap({
     map.current.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
     map.current.addControl(new maplibregl.ScaleControl({ maxWidth: 100 }), 'bottom-left');
 
-    map.current.on('load', () => setIsLoaded(true));
+    map.current.on('load', () => {
+      setIsLoaded(true);
+      // Fit to whole Italy on load
+      map.current!.fitBounds(ITALY_BOUNDS, { padding: 10 });
+    });
 
     return () => {
       markersRef.current.forEach(m => m.remove());
@@ -116,6 +123,23 @@ export function InteractiveItalyMap({
       renderProvinceMarkers(selectedRegion);
     }
   }, [data, isLoaded, viewLevel, selectedRegion, dataMap, regionTotals]);
+
+  // Handle region selection coming from bar chart: zoom and switch view
+  useEffect(() => {
+    if (!map.current || !isLoaded) return;
+    if (!regionToZoom) return;
+
+    const coords = regionCoordinates[regionToZoom];
+    if (!coords) return;
+
+    setViewLevel('region');
+    setSelectedRegion(regionToZoom);
+    map.current.flyTo({
+      center: coords.coordinates,
+      zoom: coords.zoom,
+      duration: 1000
+    });
+  }, [regionToZoom, isLoaded]);
 
   // Handle province selection from barchart (only in italy view)
   useEffect(() => {
@@ -439,11 +463,7 @@ export function InteractiveItalyMap({
     } else if (viewLevel === 'region') {
       setSelectedRegion(null);
       setViewLevel('italy');
-      map.current?.flyTo({
-        center: italyCenter,
-        zoom: italyDefaultZoom,
-        duration: 1000
-      });
+      map.current?.fitBounds(ITALY_BOUNDS, { padding: 10 });
     }
     onProvinceSelect?.(null);
   };
@@ -454,11 +474,7 @@ export function InteractiveItalyMap({
 
   onResetRegion?.(); // 🔥 RIPRISTINA TOP15
 
-  map.current?.flyTo({
-    center: italyCenter,
-    zoom: italyDefaultZoom,
-    duration: 1000
-  });
+  map.current?.fitBounds(ITALY_BOUNDS, { padding: 10 });
 };
 
   return (

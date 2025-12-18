@@ -7,12 +7,12 @@ const searchableData = [
   { type: "dataset", title: "Stipendi medi per settore", category: "Open Data" },
   { type: "dataset", title: "Distribuzione geografica dipendenti", category: "Open Data" },
   { type: "dataset", title: "Contratti per tipologia", category: "Open Data" },
-  { type: "statistica", title: "Numero totale amministrati", category: "Numeri NoiPA" },
-  { type: "statistica", title: "Erogazioni mensili", category: "Numeri NoiPA" },
+  { type: "statistica", title: "Numero totale amministrati", category: "Numeri DAG" },
+  { type: "statistica", title: "Erogazioni mensili", category: "Numeri DAG" },
   { type: "report", title: "Report trimestrale Q4 2024", category: "Report" },
   { type: "report", title: "Analisi spesa pubblica 2024", category: "Report" },
   { type: "dataset", title: "Età media dipendenti PA", category: "Open Data" },
-  { type: "statistica", title: "Puntualità pagamenti", category: "Numeri NoiPA" },
+  { type: "statistica", title: "Puntualità pagamenti", category: "Numeri DAG" },
   { type: "dataset", title: "Turnover personale", category: "Open Data" },
 ];
 
@@ -62,13 +62,13 @@ const HeroSection = () => {
           {/* Title */}
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6 animate-slide-up">
             Patrimonio Informativo{" "}
-            <span className="gold-text">NoiPA</span>
+            <span className="gold-text">DAG</span>
           </h1>
 
           {/* Subtitle */}
           <p className="text-lg md:text-xl text-primary-foreground/80 mb-10 max-w-2xl mx-auto animate-slide-up stagger-1">
             Non accumuliamo dati, creiamo conoscenza condividendo informazioni.
-            Scopri i dati della Pubblica Amministrazione italiana.
+            Scopri i dati della Pubblica Amministrazione.
           </p>
 
           {/* Search Bar */}

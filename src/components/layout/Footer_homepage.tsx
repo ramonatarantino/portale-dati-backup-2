@@ -32,7 +32,7 @@ const Footer = () => {
               </li>
               <li>
                 <a href="#numeri" className="text-sm text-primary-foreground/80 hover:text-gold transition-colors">
-                  Numeri NoiPA
+                  Numeri DAG
                 </a>
               </li>
               <li>

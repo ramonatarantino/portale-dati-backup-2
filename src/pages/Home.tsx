@@ -14,13 +14,16 @@ const Home = () => {
 
       <main>
         <HeroSection />
-        <NewsSection />
-        <UserTargetSection />
         <DataTabs />
-        <ChartsSection />
-
-        {/* ENTRY POINT ALLA DASHBOARD */}
         <DashboardTabs />
+      
+        
+        {/*<UserTargetSection />*/}
+        
+        <ChartsSection />
+        <NewsSection />
+
+        
       </main>
 
       <Footer />

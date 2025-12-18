@@ -43,7 +43,9 @@ export function filterData(data: DataRecord[], filters: FilterState): DataRecord
   return data.filter(record => {
     const provinciaMatch = filters.province.length === 0 || filters.province.includes(record.provincia_di_residenza);
     const adminMatch = filters.amministrazioni.length === 0 || filters.amministrazioni.includes(record.amministrazione);
-    const sessoMatch = filters.sesso.length === 0 || filters.sesso.includes(record.sesso);
+    // Map visual filter values ('D'|'U') to data values ('F'|'M') for matching
+    const sessoFilterMapped: ('M' | 'F')[] = (filters.sesso || []).map((g) => (g === 'U' ? 'M' : 'F'));
+    const sessoMatch = filters.sesso.length === 0 || sessoFilterMapped.includes(record.sesso);
     const fasciaMatch = filters.fasce.length === 0 || filters.fasce.includes(getAgeFascia(record.eta_min, record.eta_max));
     const annoMatch = filters.anno === null || !record.anno || record.anno === filters.anno;
     const meseMatch = filters.mese === null || !record.mese || record.mese === filters.mese;
