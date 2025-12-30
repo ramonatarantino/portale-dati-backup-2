@@ -1,4 +1,4 @@
-import { AggregatedByProvince, DataRecord, createMonthYearKey } from '@/types/data';
+import { AggregatedByProvince, DataRecord, createMonthYearKey, AmministrazioniRecord } from '@/types/data';
 import { sampleProvinceData } from './sampleProvinceData';
 
 // Capoluoghi regionali (una provincia per regione)
@@ -48,6 +48,7 @@ export interface MockMonthData {
   accessi: AccessiMockData;
   attivazioni: AttivazioniMockData;
   spesa: SpesaMockData;
+  amministrazioni: AmministrazioniRecord[];
 }
 
 export interface AccessiMockData {
@@ -166,6 +167,65 @@ function generateSpesaData(month: number): SpesaMockData {
   };
 }
 
+// Generate mock data for Amministrazioni
+function generateAmministrazioniData(month: number): AmministrazioniRecord[] {
+  const comuni = [
+    'ABANO TERME', 'ABBADIA SAN SALVATORE', 'ABBASANTA', 'ABBIATEGRASSO',
+    'ROMA', 'MILANO', 'NAPOLI', 'TORINO', 'FIRENZE', 'BOLOGNA'
+  ];
+  const amministrazioni = [
+    'MINISTERO DELL\'ISTRUZIONE E DEL MERITO',
+    'MINISTERO DELL\'INTERNO',
+    'AGENZIA DELLE ENTRATE',
+    'INPS',
+    'MINISTERO DELLA GIUSTIZIA'
+  ];
+  const regioni: Record<string, string> = {
+    'ABANO TERME': 'VENETO',
+    'ABBADIA SAN SALVATORE': 'TOSCANA',
+    'ABBASANTA': 'SARDEGNA',
+    'ABBIATEGRASSO': 'LOMBARDIA',
+    'ROMA': 'LAZIO',
+    'MILANO': 'LOMBARDIA',
+    'NAPOLI': 'CAMPANIA',
+    'TORINO': 'PIEMONTE',
+    'FIRENZE': 'TOSCANA',
+    'BOLOGNA': 'EMILIA-ROMAGNA'
+  };
+
+  const data: AmministrazioniRecord[] = [];
+
+  comuni.forEach(comune => {
+    amministrazioni.forEach(admin => {
+      // Genera dati per fasce d'età
+      const fasce = [
+        { min: 18, max: 24 }, { min: 25, max: 34 }, { min: 35, max: 44 },
+        { min: 45, max: 54 }, { min: 55, max: 64 }, { min: 65, max: null }
+      ];
+
+      fasce.forEach(fascia => {
+        ['M', 'F'].forEach(sesso => {
+          const baseRapporti = Math.floor(Math.random() * 100) + 10;
+          const rapporti = Math.floor(baseRapporti * (1 + Math.sin(month) * 0.2));
+
+          data.push({
+            comune_della_sede: comune,
+            amministrazione: admin,
+            eta_min: fascia.min,
+            eta_max: fascia.max,
+            sesso: sesso as 'M' | 'F',
+            numero_unita_organizzative: Math.floor(Math.random() * 5) + 1,
+            numero_rapporti_lavoro: rapporti,
+            regione: regioni[comune]
+          });
+        });
+      });
+    });
+  });
+
+  return data;
+}
+
 // Generate complete mock data for a month
 export function getMockDataForMonth(year: number, month: number): MockMonthData {
   return {
@@ -173,6 +233,7 @@ export function getMockDataForMonth(year: number, month: number): MockMonthData 
     accessi: generateAccessiData(month),
     attivazioni: generateAttivazioniData(month),
     spesa: generateSpesaData(month),
+    amministrazioni: generateAmministrazioniData(month),
   };
 }
 

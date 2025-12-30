@@ -47,6 +47,18 @@ export interface AccessiRecord {
   mese?: number;
 }
 
+// Dataset per Amministrazioni
+export interface AmministrazioniRecord {
+  comune_della_sede: string;
+  amministrazione: string;
+  eta_min: number;
+  eta_max: number | null;
+  sesso: 'M' | 'F';
+  numero_unita_organizzative: number;
+  numero_rapporti_lavoro: number;
+  regione?: string;
+}
+
 export interface AggregatedByProvince {
   provincia: string;
   regione?: string;
