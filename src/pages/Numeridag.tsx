@@ -7,8 +7,6 @@ import {
   FilterState,
   DatasetType,
   createMonthYearKey,
-  DATASETS,
-  DatasetInfo,
 } from "@/types/data";
 
 import {
@@ -25,17 +23,17 @@ import { getDataForPeriod } from "@/data/mockData2025";
 import Header from "@/components/layout/Header_homepage";
 import Footer from "@/components/layout/Footer_homepage";
 import HeroSection from "@/components/layout/HeroSection_homepage";
-import HeroSection_dashboard from "@/components/layout/HeroSection_dashboard";
+import HeroSection_dashboard from "@/components/layout/HeroSection_numeridag";
 import { DatasetTabs } from "@/components/dashboard/DatasetTabs";
 
-import { DistribuzioneDashboard } from "@/components/dashboards/DistribuzioneDashboard";
-import { AccessiDashboard } from "@/components/dashboards/AccessiDashboard";
+
 import { AttivazioniDashboard } from "@/components/dashboards/AttivazioniDashboard";
 import { SpesaDashboard } from "@/components/dashboards/SpesaDashboard";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const Dashboard = () => {
+const Numeridag = () => {
   const [searchParams] = useSearchParams();
-  const initialDataset = (searchParams.get("dataset") as DatasetType) || "distribuzione";
+  const initialDataset = (searchParams.get("dataset") as DatasetType) || "attivazioni";
 
   const [filters, setFilters] = useState<FilterState>({
     province: [],
@@ -50,8 +48,6 @@ const Dashboard = () => {
 
   const availableYears = [2024, 2025];
   const availableMonths = [1,2,3,4,5,6,7,8,9,10,11,12];
-
-  const openDataDatasets: DatasetInfo[] = DATASETS;
 
   const handleCalendarSelect = useCallback((year: number, month: number) => {
     setFilters(prev => ({ ...prev, anno: year, mese: month }));
@@ -119,40 +115,7 @@ const Dashboard = () => {
   const adminData = useMemo(() => aggregateByAdmin(filteredData), [filteredData]);
   const availableOptions = useMemo(() => getUniqueValues(rawData), [rawData]);
 
-  const renderDashboard = () => {
-    switch (activeDataset) {
-      case "distribuzione":
-        return (
-          <DistribuzioneDashboard
-            data={rawData}
-            filteredData={filteredData}
-            filters={filters}
-            onFiltersChange={setFilters}
-            availableOptions={availableOptions}
-            stats={stats}
-            provinceData={mockData.distribuzione}
-            ageData={ageData}
-            adminData={adminData}
-            selectedYear={filters.anno}
-            selectedMonth={filters.mese}
-            availableYears={availableYears}
-            availableMonths={availableMonths}
-            onCalendarSelect={handleCalendarSelect}
-          />
-        );
-      case "accessi":
-        return <AccessiDashboard data={mockData.accessi} selectedYear={filters.anno} selectedMonth={filters.mese} />;
-      case "amministrazioni":
-        // Placeholder for Amministrazioni dashboard
-        return <div>Amministrazioni Dashboard - In sviluppo</div>;
-      case "attivazioni":
-        return <AttivazioniDashboard data={mockData.attivazioni} selectedYear={filters.anno} selectedMonth={filters.mese} />;
-      case "spesa":
-        return <SpesaDashboard data={mockData.spesa} selectedYear={filters.anno} selectedMonth={filters.mese} />;
-      default:
-        return null;
-    }
-  };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
@@ -161,15 +124,30 @@ const Dashboard = () => {
 
       <main className="max-w-[1400px] mx-auto px-6 py-12">
         <motion.div className="apple-card p-6 mb-8">
-          <DatasetTabs
-            activeDataset={activeDataset}
-            onDatasetChange={setActiveDataset}
-            datasets={openDataDatasets}
-          />
+          <Tabs value={activeDataset} onValueChange={(value) => setActiveDataset(value as DatasetType)}>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="attivazioni">Attivazioni / Cessazioni</TabsTrigger>
+              <TabsTrigger value="spesa">Spesa Retribuzioni</TabsTrigger>
+            </TabsList>
+            <TabsContent value="attivazioni" className="mt-6">
+              <AttivazioniDashboard
+                selectedYear={filters.anno}
+                selectedMonth={filters.mese}
+                data={mockData.attivazioni}
+              />
+            </TabsContent>
+            <TabsContent value="spesa" className="mt-6">
+              <SpesaDashboard
+                selectedYear={filters.anno}
+                selectedMonth={filters.mese}
+                data={mockData.spesa}
+              />
+            </TabsContent>
+          </Tabs>
         </motion.div>
 
-        {/* Main Dashboard Content */}
-        <section>{renderDashboard()}</section>
+     
+        
       </main>
 
       <Footer />
@@ -177,4 +155,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Numeridag;

@@ -44,7 +44,7 @@ const Header = () => {
             <a href="/dashboard" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
               Open Data
             </a>
-            <a href="/dashboard" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+            <a href="/numeridag" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
               Numeri DAG
             </a>
             <a href="#news" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
@@ -84,7 +84,7 @@ const Header = () => {
               <a href="/dashboard" className="text-sm font-medium text-foreground hover:text-primary transition-colors py-2">
                 Open Data
               </a>
-              <a href="/dashboard" className="text-sm font-medium text-foreground hover:text-primary transition-colors py-2">
+              <a href="/numeridag" className="text-sm font-medium text-foreground hover:text-primary transition-colors py-2">
                 Numeri DAG
               </a>
               <a href="#news" className="text-sm font-medium text-foreground hover:text-primary transition-colors py-2">

@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "@/pages/Home";
 import Dashboard from "@/pages/Dashboard";
+import Numeridag from "@/pages/Numeridag";
 import Index from "@/pages/Index";
 
 const App = () => {
@@ -9,6 +10,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/numeridag" element={<Numeridag />} />
         <Route path="/index" element={<Index />} />
       </Routes>
     </BrowserRouter>

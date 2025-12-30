@@ -150,7 +150,7 @@ const DataTabs = () => {
               <Button 
                 variant="outline" 
                 className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                onClick={() => window.location.href = '/dashboard'}
+                onClick={() => window.location.href = '/numeridag'}
               >
                 <ExternalLink className="mr-2 h-4 w-4" />
                 Vai al Portale Numeri DAG

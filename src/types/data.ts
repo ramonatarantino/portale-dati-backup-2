@@ -87,7 +87,8 @@ export type DatasetType =
   | 'distribuzione' 
   | 'accessi' 
   | 'attivazioni' 
-  | 'spesa';
+  | 'spesa'
+  | 'amministrazioni';
 
 export interface DatasetInfo {
   id: DatasetType;
@@ -110,14 +111,20 @@ export const DATASETS: DatasetInfo[] = [
     icon: 'Key'
   },
   {
+    id: 'amministrazioni',
+    name: 'Amministrazioni',
+    description: 'Statistiche per amministrazione',
+    icon: 'Briefcase'
+  },
+  {
     id: 'attivazioni',
-    name: 'Attivazioni / Cessazioni',
+    name: 'Rapporti di lavoro',
     description: 'Rapporti di lavoro attivati e cessati',
     icon: 'TrendingUp'
   },
   {
     id: 'spesa',
-    name: 'Spesa Retribuzioni',
+    name: 'Trattamento economico',
     description: 'Spesa per retribuzioni del personale',
     icon: 'Euro'
   }
