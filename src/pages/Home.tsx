@@ -6,6 +6,7 @@ import DataTabs from "@/components/ui/DataTabs";
 import ChartsSection from "@/components/ui/ChartsSection";
 import DashboardTabs from "@/components/ui/DashboardTabs";
 import Footer from "@/components/layout/Footer_homepage";
+import { BarChartRace } from '@/components/BarChartRace';
 
 const Home = () => {
   return (
@@ -20,8 +21,11 @@ const Home = () => {
         
         {/*<UserTargetSection />*/}
         
-        <ChartsSection />
+        {/* <ChartsSection /> */}
+        
+        <BarChartRace />
         <NewsSection />
+
 
         
       </main>

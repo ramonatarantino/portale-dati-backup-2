@@ -23,7 +23,7 @@ import { getDataForPeriod } from "@/data/mockData2025";
 import Header from "@/components/layout/Header_homepage";
 import Footer from "@/components/layout/Footer_homepage";
 import HeroSection from "@/components/layout/HeroSection_homepage";
-import { CalendarPicker } from "@/components/dashboard/CalendarPicker";
+import HeroSection_dashboard from "@/components/layout/HeroSection_dashboard";
 import { DatasetTabs } from "@/components/dashboard/DatasetTabs";
 
 import { DistribuzioneDashboard } from "@/components/dashboards/DistribuzioneDashboard";
@@ -131,6 +131,9 @@ const Dashboard = () => {
             adminData={adminData}
             selectedYear={filters.anno}
             selectedMonth={filters.mese}
+            availableYears={availableYears}
+            availableMonths={availableMonths}
+            onCalendarSelect={handleCalendarSelect}
           />
         );
       case "accessi":
@@ -147,30 +150,13 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
       <Header />
-      <HeroSection />
+      <HeroSection_dashboard />
 
       <main className="max-w-[1400px] mx-auto px-6 py-12">
         <motion.div className="apple-card p-6 mb-8">
           <DatasetTabs
             activeDataset={activeDataset}
             onDatasetChange={setActiveDataset}
-          />
-        </motion.div>
-
-        {/* Calendar Picker - Above dashboard content */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="apple-card p-4 mb-8 border-gold/20 bg-gradient-to-br from-gold/5 to-gold/10 max-w-4xl mx-auto"
-        >
-          <CalendarPicker
-            selectedYear={filters.anno}
-            selectedMonth={filters.mese}
-            availableYears={availableYears}
-            availableMonths={availableMonths}
-            onSelect={handleCalendarSelect}
-            dataByMonthYear={{}}
           />
         </motion.div>
 

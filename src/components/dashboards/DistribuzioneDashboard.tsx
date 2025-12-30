@@ -18,6 +18,7 @@ import { GenderPieChart } from '@/components/charts/GenderPieChart';
 import { AgeStackedChart } from '@/components/charts/AgeStackedChart';
 import { AdminTreemap } from '@/components/charts/AdminTreemap';
 import { DataTable } from '@/components/dashboard/DataTable';
+import { CalendarPicker } from '@/components/dashboard/CalendarPicker';
 
 interface DistribuzioneDashboardProps {
   data: DataRecord[];
@@ -36,6 +37,10 @@ interface DistribuzioneDashboardProps {
   adminData: AggregatedByAdmin[];
   selectedYear: number | null;
   selectedMonth: number | null;
+  availableYears: number[];
+  availableMonths: number[];
+  onCalendarSelect: (year: number, month: number) => void;
+  dataByMonthYear?: Record<string, unknown>;
 }
 
 export function DistribuzioneDashboard(props: DistribuzioneDashboardProps) {
@@ -50,7 +55,11 @@ export function DistribuzioneDashboard(props: DistribuzioneDashboardProps) {
     ageData,
     adminData,
     selectedYear,
-    selectedMonth
+    selectedMonth,
+    availableYears,
+    availableMonths,
+    onCalendarSelect,
+    dataByMonthYear = {}
   } = props;
 
   /** 🔥 SINGLE SOURCE OF TRUTH */
@@ -98,17 +107,30 @@ export function DistribuzioneDashboard(props: DistribuzioneDashboardProps) {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        className="grid grid-cols-1 xl:grid-cols-2 gap-6"
       >
-        <StatCard title="Totale Amministrati" value={stats.totale} icon={Users} />
-        <StatCard title="Province" value={stats.province} icon={MapPin} />
-        <StatCard title="Amministrazioni" value={stats.amministrazioni} icon={Building2} />
-        <StatCard
-          title="Nuove assunzioni"
-          value={nuoveAssunzioni}
-          icon={UserPlus}
-          trend={crescitaAssunzioni}
-        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <StatCard title="Totale Amministrati" value={stats.totale} icon={Users} />
+          <StatCard title="Province" value={stats.province} icon={MapPin} />
+          <StatCard title="Amministrazioni" value={stats.amministrazioni} icon={Building2} />
+          <StatCard
+            title="Nuove assunzioni"
+            value={nuoveAssunzioni}
+            icon={UserPlus}
+            trend={crescitaAssunzioni}
+          />
+        </div>
+
+        <div className="h-full">
+          <CalendarPicker
+            selectedYear={selectedYear}
+            selectedMonth={selectedMonth}
+            availableYears={availableYears}
+            availableMonths={availableMonths}
+            onSelect={onCalendarSelect}
+            dataByMonthYear={dataByMonthYear}
+          />
+        </div>
       </motion.div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
