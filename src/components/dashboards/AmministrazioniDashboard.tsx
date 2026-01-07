@@ -13,8 +13,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-
-// Interfaccia per i dati grezzi
+import { CalendarPicker } from '@/components/dashboard/CalendarPicker';
 interface AmministrazioniRecord {
   comune_della_sede: string;
   amministrazione: string;
@@ -40,6 +39,10 @@ interface AmministrazioniDashboardProps {
   data: AmministrazioniRecord[];
   selectedYear: number | null;
   selectedMonth: number | null;
+  availableYears: number[];
+  availableMonths: number[];
+  onCalendarSelect: (year: number, month: number) => void;
+  dataByMonthYear?: Record<string, unknown>;
 }
 
 // Colori per amministrazioni
@@ -54,7 +57,15 @@ const ADMIN_COLORS: Record<string, string> = {
 
 const getAdminColor = (admin: string) => ADMIN_COLORS[admin] || '#6b7280';
 
-export function AmministrazioniDashboard({ data, selectedYear, selectedMonth }: AmministrazioniDashboardProps) {
+export function AmministrazioniDashboard({ 
+  data, 
+  selectedYear, 
+  selectedMonth, 
+  availableYears, 
+  availableMonths, 
+  onCalendarSelect, 
+  dataByMonthYear = {} 
+}: AmministrazioniDashboardProps) {
   const [selectedRegione, setSelectedRegione] = useState<string>('all');
   const [selectedAdmin, setSelectedAdmin] = useState<string>('all');
   const [selectedComune, setSelectedComune] = useState<ComuneData | null>(null);
@@ -137,13 +148,32 @@ export function AmministrazioniDashboard({ data, selectedYear, selectedMonth }: 
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        className="flex flex-col xl:flex-row gap-6"
       >
-        <Card>
+        {/* Calendario sticky */}
+        <div className="xl:sticky xl:top-6 xl:h-fit xl:w-64 xl:flex-shrink-0">
+          <CalendarPicker
+            selectedYear={selectedYear}
+            selectedMonth={selectedMonth}
+            availableYears={availableYears}
+            availableMonths={availableMonths}
+            onSelect={onCalendarSelect}
+            dataByMonthYear={dataByMonthYear}
+          />
+        </div>
+
+        {/* Contenuto principale */}
+        <div className="flex-1 space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
+            <Card>
           <CardHeader>
             <CardTitle>Filtri</CardTitle>
           </CardHeader>
@@ -290,6 +320,9 @@ export function AmministrazioniDashboard({ data, selectedYear, selectedMonth }: 
           </Card>
         </motion.div>
       )}
+
+        </div>
+      </motion.div>
 
       {/* Legenda colori */}
       <motion.div

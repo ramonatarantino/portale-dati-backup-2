@@ -34,6 +34,7 @@ export function GenderPieChart({ data }: GenderPieChartProps) {
       return (
         <motion.div 
           className="bg-card rounded-xl p-4 shadow-lg border border-border"
+          style={{ zIndex: 9999 }}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
         >
@@ -103,12 +104,15 @@ export function GenderPieChart({ data }: GenderPieChartProps) {
                 />
               ))}
             </Pie>
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip 
+              content={<CustomTooltip />} 
+              wrapperStyle={{ zIndex: 10000 }}
+            />
           </PieChart>
         </ResponsiveContainer>
 
         {/* Center text */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ zIndex: 1 }}>
           <div className="text-center">
             <p className="text-2xl font-bold">
               {new Intl.NumberFormat('it-IT').format(chartData.reduce((acc, d) => acc + d.value, 0))}

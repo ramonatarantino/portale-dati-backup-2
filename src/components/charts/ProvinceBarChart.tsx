@@ -181,12 +181,12 @@ export function ProvinceBarChart({ data, maxItems = 15, onProvinceClick, onRegio
           </motion.span>
         )}
       </div>
-      <div className="h-[420px]">
+      <div className="h-[390px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={chartData}
             layout="vertical"
-            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" horizontal={false} opacity={0.5} />
             <XAxis 

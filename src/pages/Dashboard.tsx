@@ -142,13 +142,49 @@ const Dashboard = () => {
           />
         );
       case "accessi":
-        return <AccessiDashboard data={mockData.accessi} selectedYear={filters.anno} selectedMonth={filters.mese} />;
+        return (
+          <AccessiDashboard 
+            data={mockData.accessi} 
+            selectedYear={filters.anno} 
+            selectedMonth={filters.mese}
+            availableYears={availableYears}
+            availableMonths={availableMonths}
+            onCalendarSelect={handleCalendarSelect}
+          />
+        );
       case "amministrazioni":
-        return <AmministrazioniDashboard data={mockData.amministrazioni} selectedYear={filters.anno} selectedMonth={filters.mese} />;
+        return (
+          <AmministrazioniDashboard 
+            data={mockData.amministrazioni} 
+            selectedYear={filters.anno} 
+            selectedMonth={filters.mese}
+            availableYears={availableYears}
+            availableMonths={availableMonths}
+            onCalendarSelect={handleCalendarSelect}
+          />
+        );
       case "attivazioni":
-        return <AttivazioniDashboard data={mockData.attivazioni} selectedYear={filters.anno} selectedMonth={filters.mese} />;
+        return (
+          <AttivazioniDashboard 
+            data={mockData.attivazioni} 
+            selectedYear={filters.anno} 
+            selectedMonth={filters.mese}
+            availableYears={availableYears}
+            availableMonths={availableMonths}
+            onCalendarSelect={handleCalendarSelect}
+          />
+        );
       case "spesa":
-        return <SpesaDashboard data={mockData.spesa} selectedYear={filters.anno} selectedMonth={filters.mese} />;
+        return (
+          <SpesaDashboard 
+            data={mockData.spesa} 
+            selectedYear={filters.anno} 
+            selectedMonth={filters.mese}
+            availableYears={availableYears}
+            availableMonths={availableMonths}
+            onCalendarSelect={handleCalendarSelect}
+          />
+        );
       default:
         return null;
     }

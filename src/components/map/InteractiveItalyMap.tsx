@@ -553,7 +553,7 @@ export function InteractiveItalyMap({
       animate={{ opacity: 1, y: 0 }}
       className="apple-card p-6 relative overflow-hidden"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-gold/5 pointer-events-none rounded-3xl" />
+      <div className="absolute inset-0" />
       
       <div className="relative">
         {/* Header */}

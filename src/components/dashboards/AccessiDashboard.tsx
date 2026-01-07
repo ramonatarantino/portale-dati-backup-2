@@ -6,13 +6,27 @@ import { CredentialChart } from '@/components/charts/CredentialChart';
 import { EnteChart } from '@/components/charts/EnteChart';
 import { AccessiMockData } from '@/data/mockData2025';
 
+import { CalendarPicker } from '@/components/dashboard/CalendarPicker';
+
 interface AccessiDashboardProps {
   selectedYear: number | null;
   selectedMonth: number | null;
   data: AccessiMockData;
+  availableYears: number[];
+  availableMonths: number[];
+  onCalendarSelect: (year: number, month: number) => void;
+  dataByMonthYear?: Record<string, unknown>;
 }
 
-export function AccessiDashboard({ selectedYear, selectedMonth, data }: AccessiDashboardProps) {
+export function AccessiDashboard({ 
+  selectedYear, 
+  selectedMonth, 
+  data, 
+  availableYears, 
+  availableMonths, 
+  onCalendarSelect, 
+  dataByMonthYear = {} 
+}: AccessiDashboardProps) {
   // Transform data for charts
   const mockAccessData = data.trendMensile.map(item => ({
     month: item.mese,
@@ -37,8 +51,27 @@ export function AccessiDashboard({ selectedYear, selectedMonth, data }: AccessiD
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        className="flex flex-col xl:flex-row gap-6"
       >
+        {/* Calendario sticky */}
+        <div className="xl:sticky xl:top-6 xl:h-fit xl:w-64 xl:flex-shrink-0">
+          <CalendarPicker
+            selectedYear={selectedYear}
+            selectedMonth={selectedMonth}
+            availableYears={availableYears}
+            availableMonths={availableMonths}
+            onSelect={onCalendarSelect}
+            dataByMonthYear={dataByMonthYear}
+          />
+        </div>
+
+        {/* Contenuto principale */}
+        <div className="flex-1 space-y-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
         <StatCard
           title="Accessi Totali"
           value={totalAccessi}
@@ -85,6 +118,9 @@ export function AccessiDashboard({ selectedYear, selectedMonth, data }: AccessiD
           Dati relativi a {selectedMonth}/{selectedYear}
         </motion.div>
       )}
+
+        </div>
+      </motion.div>
     </div>
   );
 }

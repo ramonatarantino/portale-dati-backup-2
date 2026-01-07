@@ -134,6 +134,9 @@ const Numeridag = () => {
                 selectedYear={filters.anno}
                 selectedMonth={filters.mese}
                 data={mockData.attivazioni}
+                availableYears={availableYears}
+                availableMonths={availableMonths}
+                onCalendarSelect={handleCalendarSelect}
               />
             </TabsContent>
             <TabsContent value="spesa" className="mt-6">
@@ -141,6 +144,9 @@ const Numeridag = () => {
                 selectedYear={filters.anno}
                 selectedMonth={filters.mese}
                 data={mockData.spesa}
+                availableYears={availableYears}
+                availableMonths={availableMonths}
+                onCalendarSelect={handleCalendarSelect}
               />
             </TabsContent>
           </Tabs>

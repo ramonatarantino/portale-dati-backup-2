@@ -142,7 +142,7 @@ export function CalendarPicker({
       </div>
 
       {/* Month Grid */}
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-3 gap-2">
         {MONTHS.map((month, index) => {
           const monthNum = index + 1;
           const available = isMonthAvailable(monthNum) && (viewYear < 2025 || (viewYear === 2025 && monthNum <= 10));
@@ -158,7 +158,7 @@ export function CalendarPicker({
               disabled={!available}
               className={cn(
                 "relative py-3 px-2 rounded-xl text-sm font-medium transition-all duration-300",
-                selected && "bg-primary text-primary-foreground shadow-lg shadow-primary/25",
+                selected && "bg-gold text-gold-dark shadow-lg shadow-gold/25",
                 !selected && hasData && "bg-accent/20 text-foreground border border-accent/40 hover:bg-accent/30",
                 !selected && available && !hasData && "hover:bg-secondary text-foreground",
                 !available && "text-muted-foreground/30 cursor-not-allowed"
