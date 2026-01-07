@@ -39,7 +39,7 @@ export function CalendarPicker({
   );
 
   const minYear = sortedYears.length > 0 ? Math.min(...sortedYears) : currentDate.getFullYear() - 5;
-  const maxYear = sortedYears.length > 0 ? Math.max(...sortedYears) : currentDate.getFullYear();
+  const maxYear = Math.min(sortedYears.length > 0 ? Math.max(...sortedYears) : currentDate.getFullYear(), 2025);
 
   const isMonthAvailable = (month: number) => {
     if (availableMonths.length === 0) return true;
@@ -64,8 +64,10 @@ export function CalendarPicker({
   };
 
   const handleMonthClick = (monthIndex: number) => {
-    if (isMonthAvailable(monthIndex + 1)) {
-      onSelect(viewYear, monthIndex + 1);
+    const monthNum = monthIndex + 1;
+    const available = isMonthAvailable(monthNum) && (viewYear < 2025 || (viewYear === 2025 && monthNum <= 10));
+    if (available) {
+      onSelect(viewYear, monthNum);
     }
   };
 
@@ -142,9 +144,10 @@ export function CalendarPicker({
       {/* Month Grid */}
       <div className="grid grid-cols-4 gap-2">
         {MONTHS.map((month, index) => {
-          const available = isMonthAvailable(index + 1);
+          const monthNum = index + 1;
+          const available = isMonthAvailable(monthNum) && (viewYear < 2025 || (viewYear === 2025 && monthNum <= 10));
           const selected = isSelected(index);
-          const hasData = hasDataForMonth(viewYear, index + 1);
+          const hasData = hasDataForMonth(viewYear, monthNum);
           
           return (
             <motion.button

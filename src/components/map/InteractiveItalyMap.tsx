@@ -31,8 +31,8 @@ type ViewLevel = 'italy' | 'region' | 'province' | 'city';
 
 // Colors from design system (blue/gold/white)
 const COLORS = {
-  primary: 'hsl(215, 90%, 45%)',
-  primaryLight: 'hsl(210, 70%, 60%)',
+  primary: 'hsl(212, 70%, 18%)',      // #082B6F - Same as GenderPieChart
+  primaryLight: 'hsl(212, 70%, 40%)', // Lighter version of the same blue
   gold: 'hsl(45, 90%, 50%)',
   goldDark: 'hsl(40, 90%, 40%)',
   white: '#ffffff',
@@ -122,10 +122,10 @@ export function InteractiveItalyMap({
 
     if (viewLevel === 'italy') {
       renderCapitalMarkers();
-      } else if (viewLevel === 'region' && selectedRegion) {
-        renderProvinceMarkers(selectedRegion);
-      } else if (viewLevel === 'city' && selectedProvince) {
-        renderCityMarkers(selectedProvince);
+    } else if (viewLevel === 'region' && selectedRegion) {
+      renderProvinceMarkers(selectedRegion);
+    } else if ((viewLevel === 'province' || viewLevel === 'city') && selectedProvince) {
+      renderCityMarkers(selectedProvince);
     }
   }, [data, isLoaded, viewLevel, selectedRegion, dataMap, regionTotals]);
 
@@ -157,19 +157,29 @@ export function InteractiveItalyMap({
     map.current.flyTo({ center: target.coordinates, zoom: target.zoom, duration: 900 });
   }, [cityToZoom, selectedProvince, isLoaded]);
 
-  // Handle province selection from barchart (only in italy view)
+  // Handle province selection from barchart
   useEffect(() => {
-    if (!map.current || !isLoaded || !selectedProvince || viewLevel !== 'italy') return;
+    if (!map.current || !isLoaded || !selectedProvince) return;
 
     const coords = provinceCoordinates[selectedProvince.toUpperCase()];
     if (!coords) return;
 
-    // Zoom to the selected province
-    map.current.flyTo({
-      center: coords.coordinates,
-      zoom: coords.zoom + 1,
-      duration: 1000
-    });
+    if (viewLevel === 'italy') {
+      // Zoom to the selected province from italy view
+      map.current.flyTo({
+        center: coords.coordinates,
+        zoom: coords.zoom + 1,
+        duration: 1000
+      });
+    } else if (viewLevel === 'region') {
+      // Switch to province view and zoom to the province
+      setViewLevel('province');
+      map.current.flyTo({
+        center: coords.coordinates,
+        zoom: coords.zoom + 1,
+        duration: 1000
+      });
+    }
   }, [selectedProvince, isLoaded, viewLevel]);
 
   const clearMarkers = () => {

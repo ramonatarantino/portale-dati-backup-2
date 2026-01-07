@@ -9,10 +9,10 @@ const Footer = () => {
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-gold/20 rounded-lg flex items-center justify-center">
-                <span className="text-gold-light font-bold text-xl">N</span>
+                <span className="text-gold-light font-bold text-xl">D</span>
               </div>
               <div>
-                <h3 className="font-bold text-lg">NoiPA</h3>
+                <h3 className="font-bold text-lg">DAG</h3>
                 <p className="text-xs text-primary-foreground/70">Patrimonio Informativo</p>
               </div>
             </div>
@@ -86,8 +86,8 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-2 text-sm text-primary-foreground/80">
                 <Mail className="h-4 w-4 text-gold/70" />
-                <a href="mailto:info@noipa.it" className="hover:text-gold transition-colors">
-                  info@noipa.it
+                <a href="mailto:info@dag.it" className="hover:text-gold transition-colors">
+                  info@dag.it
                 </a>
               </li>
               <li className="flex items-center gap-2 text-sm text-primary-foreground/80">
@@ -121,7 +121,7 @@ const Footer = () => {
             </div>
           </div>
           <p className="text-center text-xs text-primary-foreground/50 mt-6">
-            © 2025 NoiPA - Tutti i diritti riservati
+            © 2025 DAG - Tutti i diritti riservati
           </p>
         </div>
       </div>

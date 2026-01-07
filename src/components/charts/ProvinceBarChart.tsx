@@ -26,14 +26,15 @@ interface ProvinceBarChartProps {
 }
 
 
-// Blue palette for bars; selected items will be highlighted in gold
+// Blue palette for bars using the same blue as GenderPieChart (HSL: 212 70% 18%)
+// Decreasing intensity from darkest to lightest
 const CHART_COLORS = [
-  'hsl(210, 100%, 25%)',
-  'hsl(210, 90%, 35%)',
-  'hsl(210, 80%, 45%)',
-  'hsl(210, 70%, 55%)',
-  'hsl(210, 60%, 65%)',
-  'hsl(210, 50%, 75%)',
+  'hsl(212, 70%, 18%)',  // #082B6F - Same as GenderPieChart
+  'hsl(212, 70%, 28%)',
+  'hsl(212, 70%, 38%)',
+  'hsl(212, 70%, 48%)',
+  'hsl(212, 70%, 58%)',
+  'hsl(212, 70%, 68%)',
 ];
 
 export function ProvinceBarChart({ data, maxItems = 15, onProvinceClick, onRegionSelect, onCitySelect, selectedProvince, selectedRegion, selectedCity }: ProvinceBarChartProps) {
@@ -214,7 +215,8 @@ export function ProvinceBarChart({ data, maxItems = 15, onProvinceClick, onRegio
             >
               {chartData.map((item, index) => {
                 const isSelected = selectedProvince
-                  ? (!selectedCity && selectedProvince.toUpperCase() === item.fullName.toUpperCase())
+                  ? (!selectedCity && selectedProvince.toUpperCase() === item.fullName.toUpperCase()) ||
+                    (selectedCity && selectedCity.toUpperCase() === item.fullName.toUpperCase())
                   : false;
                 return (
                   <Cell 
