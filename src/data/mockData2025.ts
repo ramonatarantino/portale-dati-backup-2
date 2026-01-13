@@ -67,6 +67,12 @@ export interface AttivazioniMockData {
   saldo: number;
   trendMensile: { mese: string; attivazioni: number; cessazioni: number }[];
   perRegione: { regione: string; attivazioni: number; cessazioni: number }[];
+  // Nuovi dati basati sui 4 dataset forniti
+  perCategoria: { categoria: string; numero: number }[];
+  perEtaSesso: { fascia_eta: string; maschi: number; femmine: number }[];
+  perMotivoAssunzione: { motivo: string; numero: number }[];
+  perMotivoCessazione: { motivo: string; numero: number }[];
+  perProvincia: { provincia: string; attivazioni: number; cessazioni: number }[];
 }
 
 export interface SpesaMockData {
@@ -114,16 +120,79 @@ function generateAttivazioniData(month: number): AttivazioniMockData {
   const baseAttivazioni = 12000 + month * 800;
   const baseCessazioni = 8500 + month * 400;
   const variation = () => 0.85 + Math.random() * 0.3;
-  
+
+  // Province italiane principali
+  const province = [
+    'AGRIGENTO', 'ALESSANDRIA', 'ANCONA', 'AOSTA', 'AREZZO', 'ASCOLI PICENO',
+    'ASTI', 'AVELLINO', 'BARI', 'BARLETTA-ANDRIA-TRANI', 'BELLUNO', 'BENEVENTO',
+    'BERGAMO', 'BIELLA', 'BOLOGNA', 'BOLZANO', 'BRESCIA', 'BRINDISI',
+    'CAGLIARI', 'CAL TANISSETTA', 'CAMPOBASSO', 'CARBONIA-IGLESIAS',
+    'CASERTA', 'CATANIA', 'CATANZARO', 'CHIETI', 'COMO', 'COSENZA',
+    'CREMONA', 'CROTONE', 'CUNEO', 'ENNA', 'FERMO', 'FERRARA', 'FIRENZE',
+    'FOGGIA', 'FORLÌ-CESENA', 'FROSINONE', 'GENOVA', 'GORIZIA', 'GROSSETO',
+    'IMPERIA', 'ISERNIA', 'LA SPEZIA', 'LATINA', 'LECCE', 'LECCO', 'LIVORNO',
+    'LODI', 'LUCCA', 'MACERATA', 'MANTOVA', 'MASSA-CARRARA', 'MATERA',
+    'MESSINA', 'MILANO', 'MODENA', 'MONZA E BRIANZA', 'NAPOLI', 'NOVARA',
+    'NUORO', 'OGLIASTRA', 'OLBIA-TEMPIO', 'ORISTANO', 'PADOVA', 'PALERMO',
+    'PARMA', 'PAVIA', 'PERUGIA', 'PESARO E URBINO', 'PESCARA', 'PIACENZA',
+    'PISA', 'PISTOIA', 'PORDENONE', 'POTENZA', 'PRATO', 'RAGUSA', 'RAVENNA',
+    'REGGIO CALABRIA', 'REGGIO EMILIA', 'RIETI', 'RIMINI', 'ROMA', 'ROVIGO',
+    'SALERNO', 'SASSARI', 'SAVONA', 'SIENA', 'SIRACUSA', 'SONDRIO', 'TARANTO',
+    'TERAMO', 'TERNI', 'TORINO', 'TRAPANI', 'TRENTO', 'TREVISO', 'TRIESTE',
+    'UDINE', 'VARESE', 'VENEZIA', 'VERBANIA', 'VERCELLI', 'VERONA', 'VIBO VALENTIA',
+    'VICENZA', 'VITERBO'
+  ];
+
+  // Mappatura province a regioni
+  const provinceToRegione: Record<string, string> = {
+    'AGRIGENTO': 'SICILIA', 'ALESSANDRIA': 'PIEMONTE', 'ANCONA': 'MARCHE',
+    'AOSTA': 'VALLE D\'AOSTA', 'AREZZO': 'TOSCANA', 'ASCOLI PICENO': 'MARCHE',
+    'ASTI': 'PIEMONTE', 'AVELLINO': 'CAMPANIA', 'BARI': 'PUGLIA',
+    'BARLETTA-ANDRIA-TRANI': 'PUGLIA', 'BELLUNO': 'VENETO', 'BENEVENTO': 'CAMPANIA',
+    'BERGAMO': 'LOMBARDIA', 'BIELLA': 'PIEMONTE', 'BOLOGNA': 'EMILIA-ROMAGNA',
+    'BOLZANO': 'TRENTINO-ALTO ADIGE', 'BRESCIA': 'LOMBARDIA', 'BRINDISI': 'PUGLIA',
+    'CAGLIARI': 'SARDEGNA', 'CAL TANISSETTA': 'SICILIA', 'CAMPOBASSO': 'MOLISE',
+    'CARBONIA-IGLESIAS': 'SARDEGNA', 'CASERTA': 'CAMPANIA', 'CATANIA': 'SICILIA',
+    'CATANZARO': 'CALABRIA', 'CHIETI': 'ABRUZZO', 'COMO': 'LOMBARDIA',
+    'COSENZA': 'CALABRIA', 'CREMONA': 'LOMBARDIA', 'CROTONE': 'CALABRIA',
+    'CUNEO': 'PIEMONTE', 'ENNA': 'SICILIA', 'FERMO': 'MARCHE', 'FERRARA': 'EMILIA-ROMAGNA',
+    'FIRENZE': 'TOSCANA', 'FOGGIA': 'PUGLIA', 'FORLÌ-CESENA': 'EMILIA-ROMAGNA',
+    'FROSINONE': 'LAZIO', 'GENOVA': 'LIGURIA', 'GORIZIA': 'FRIULI-VENEZIA GIULIA',
+    'GROSSETO': 'TOSCANA', 'IMPERIA': 'LIGURIA', 'ISERNIA': 'MOLISE',
+    'LA SPEZIA': 'LIGURIA', 'LATINA': 'LAZIO', 'LECCE': 'PUGLIA', 'LECCO': 'LOMBARDIA',
+    'LIVORNO': 'TOSCANA', 'LODI': 'LOMBARDIA', 'LUCCA': 'TOSCANA',
+    'MACERATA': 'MARCHE', 'MANTOVA': 'LOMBARDIA', 'MASSA-CARRARA': 'TOSCANA',
+    'MATERA': 'BASILICATA', 'MESSINA': 'SICILIA', 'MILANO': 'LOMBARDIA',
+    'MODENA': 'EMILIA-ROMAGNA', 'MONZA E BRIANZA': 'LOMBARDIA', 'NAPOLI': 'CAMPANIA',
+    'NOVARA': 'PIEMONTE', 'NUORO': 'SARDEGNA', 'OGLIASTRA': 'SARDEGNA',
+    'OLBIA-TEMPIO': 'SARDEGNA', 'ORISTANO': 'SARDEGNA', 'PADOVA': 'VENETO',
+    'PALERMO': 'SICILIA', 'PARMA': 'EMILIA-ROMAGNA', 'PAVIA': 'LOMBARDIA',
+    'PERUGIA': 'UMBRIA', 'PESARO E URBINO': 'MARCHE', 'PESCARA': 'ABRUZZO',
+    'PIACENZA': 'EMILIA-ROMAGNA', 'PISA': 'TOSCANA', 'PISTOIA': 'TOSCANA',
+    'PORDENONE': 'FRIULI-VENEZIA GIULIA', 'POTENZA': 'BASILICATA', 'PRATO': 'TOSCANA',
+    'RAGUSA': 'SICILIA', 'RAVENNA': 'EMILIA-ROMAGNA', 'REGGIO CALABRIA': 'CALABRIA',
+    'REGGIO EMILIA': 'EMILIA-ROMAGNA', 'RIETI': 'LAZIO', 'RIMINI': 'EMILIA-ROMAGNA',
+    'ROMA': 'LAZIO', 'ROVIGO': 'VENETO', 'SALERNO': 'CAMPANIA', 'SASSARI': 'SARDEGNA',
+    'SAVONA': 'LIGURIA', 'SIENA': 'TOSCANA', 'SIRACUSA': 'SICILIA', 'SONDRIO': 'LOMBARDIA',
+    'TARANTO': 'PUGLIA', 'TERAMO': 'ABRUZZO', 'TERNI': 'UMBRIA', 'TORINO': 'PIEMONTE',
+    'TRAPANI': 'SICILIA', 'TRENTO': 'TRENTINO-ALTO ADIGE', 'TREVISO': 'VENETO',
+    'TRIESTE': 'FRIULI-VENEZIA GIULIA', 'UDINE': 'FRIULI-VENEZIA GIULIA',
+    'VARESE': 'LOMBARDIA', 'VENEZIA': 'VENETO', 'VERBANIA': 'PIEMONTE',
+    'VERCELLI': 'PIEMONTE', 'VERONA': 'VENETO', 'VIBO VALENTIA': 'CALABRIA',
+    'VICENZA': 'VENETO', 'VITERBO': 'LAZIO'
+  };
+
   return {
     totaleAttivazioni: Math.round(baseAttivazioni * variation()),
     totaleCessazioni: Math.round(baseCessazioni * variation()),
     saldo: Math.round((baseAttivazioni - baseCessazioni) * variation()),
+
     trendMensile: MONTH_NAMES.slice(0, month).map((mese, i) => ({
       mese,
       attivazioni: Math.round((10000 + i * 500) * variation()),
       cessazioni: Math.round((7000 + i * 300) * variation())
     })),
+
     perRegione: [
       { regione: 'Lombardia', attivazioni: Math.round(2500 * variation()), cessazioni: Math.round(1800 * variation()) },
       { regione: 'Lazio', attivazioni: Math.round(2200 * variation()), cessazioni: Math.round(1600 * variation()) },
@@ -133,7 +202,53 @@ function generateAttivazioniData(month: number): AttivazioniMockData {
       { regione: 'Piemonte', attivazioni: Math.round(1200 * variation()), cessazioni: Math.round(850 * variation()) },
       { regione: 'Emilia-Romagna', attivazioni: Math.round(1100 * variation()), cessazioni: Math.round(780 * variation()) },
       { regione: 'Toscana', attivazioni: Math.round(950 * variation()), cessazioni: Math.round(680 * variation()) },
-    ]
+    ],
+
+    // Dataset 1: Attivazioni per categoria (inquadramento)
+    perCategoria: [
+      { categoria: 'QUALIFICA: ASSISTENTI-DOGANE-EX II F 4', numero: Math.round(450 * variation()) },
+      { categoria: 'QUALIFICA: FUNZIONARI-DOGANE-EX III F 2', numero: Math.round(380 * variation()) },
+      { categoria: 'QUALIFICA: FUNZIONARI-DOGANE-EX III F 3', numero: Math.round(520 * variation()) },
+      { categoria: 'QUALIFICA: ASSISTENTI-ENTRATE-EX II F 3', numero: Math.round(680 * variation()) },
+      { categoria: 'QUALIFICA: ASSISTENTI-ENTRATE-EX II F 4', numero: Math.round(720 * variation()) },
+      { categoria: 'QUALIFICA: ASSISTENTI-ENTRATE-EX II F 5', numero: Math.round(590 * variation()) },
+      { categoria: 'QUALIFICA: ASSISTENTI-ENTRATE-EX II F 6', numero: Math.round(850 * variation()) },
+      { categoria: 'QUALIFICA: FUNZ AG FISC CCNL 2019-2021', numero: Math.round(920 * variation()) },
+      { categoria: 'QUALIFICA: FUNZIONARI-ENTRATE-EX III F 1', numero: Math.round(480 * variation()) },
+      { categoria: 'QUALIFICA: FUNZIONARI-ENTRATE-EX III F 3', numero: Math.round(1100 * variation()) },
+    ],
+
+    // Dataset 2: Attivazioni per età e sesso
+    perEtaSesso: [
+      { fascia_eta: '25-34', maschi: Math.round(1200 * variation()), femmine: Math.round(980 * variation()) },
+      { fascia_eta: '35-44', maschi: Math.round(1450 * variation()), femmine: Math.round(1250 * variation()) },
+      { fascia_eta: '45-54', maschi: Math.round(1680 * variation()), femmine: Math.round(1420 * variation()) },
+      { fascia_eta: '55-64', maschi: Math.round(1350 * variation()), femmine: Math.round(1180 * variation()) },
+      { fascia_eta: '65+', maschi: Math.round(420 * variation()), femmine: Math.round(380 * variation()) },
+    ],
+
+    // Dataset 3: Assunzioni per motivo
+    perMotivoAssunzione: [
+      { motivo: 'CONCORSO', numero: Math.round(2850 * variation()) },
+      { motivo: 'MOBILITA\'', numero: Math.round(890 * variation()) },
+      { motivo: 'NOMINA', numero: Math.round(450 * variation()) },
+      { motivo: 'ALTRO MOTIVO', numero: Math.round(320 * variation()) },
+    ],
+
+    // Dataset 4: Cessazioni per motivo
+    perMotivoCessazione: [
+      { motivo: 'FINE INCARICO', numero: Math.round(2100 * variation()) },
+      { motivo: 'PENSIONAMENTO', numero: Math.round(1650 * variation()) },
+      { motivo: 'DIMISSIONI', numero: Math.round(890 * variation()) },
+      { motivo: 'ALTRO MOTIVO', numero: Math.round(580 * variation()) },
+    ],
+
+    // Dati per provincia (campione rappresentativo)
+    perProvincia: province.slice(0, 15).map(provincia => ({
+      provincia,
+      attivazioni: Math.round((800 + Math.random() * 400) * variation()),
+      cessazioni: Math.round((600 + Math.random() * 300) * variation())
+    }))
   };
 }
 

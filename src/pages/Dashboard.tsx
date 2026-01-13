@@ -21,6 +21,7 @@ import {
 } from "@/utils/dataParser";
 
 import { getDataForPeriod } from "@/data/mockData2025";
+import { getTimePoints } from "@/data/demographicData";
 
 import Header from "@/components/layout/Header_homepage";
 import Footer from "@/components/layout/Footer_homepage";
@@ -50,7 +51,13 @@ const Dashboard = () => {
   const [activeDataset, setActiveDataset] = useState<DatasetType>(initialDataset);
 
   const availableYears = [2024, 2025];
-  const availableMonths = [1,2,3,4,5,6,7,8,9,10,11,12];
+  const availableMonths = useMemo(() => {
+    if (activeDataset === "amministrazioni") {
+      const timePoints = getTimePoints();
+      return Array.from(new Set(timePoints.map(tp => parseInt(tp.split('-')[1]))));
+    }
+    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  }, [activeDataset]);
 
   const openDataDatasets: DatasetInfo[] = DATASETS;
 

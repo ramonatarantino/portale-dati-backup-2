@@ -159,7 +159,7 @@ export function CalendarPicker({
               className={cn(
                 "relative py-3 px-2 rounded-xl text-sm font-medium transition-all duration-300",
                 selected && "bg-gold text-gold-dark shadow-lg shadow-gold/25",
-                !selected && hasData && "bg-accent/20 text-foreground border border-accent/40 hover:bg-accent/30",
+                // !selected && hasData && "bg-accent/20 text-foreground border border-accent/40 hover:bg-accent/30",
                 !selected && available && !hasData && "hover:bg-secondary text-foreground",
                 !available && "text-muted-foreground/30 cursor-not-allowed"
               )}
@@ -172,9 +172,9 @@ export function CalendarPicker({
                 />
               )}
               <span className={cn("relative z-10", selected && "text-white font-semibold")}>{month}</span>
-              {hasData && !selected && (
+              {/* {hasData && !selected && (
                 <span className="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full" />
-              )}
+              )} */}
             </motion.button>
           );
         })}
