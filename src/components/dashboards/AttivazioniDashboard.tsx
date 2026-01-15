@@ -283,8 +283,8 @@ export function AttivazioniDashboard({
               formatter={(value: number) => new Intl.NumberFormat('it-IT').format(value)}
             />
             <Legend />
-            <Bar dataKey="maschi" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} name="Maschi" />
-            <Bar dataKey="femmine" fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} name="Femmine" />
+            <Bar dataKey="maschi" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} name="Uomini" />
+            <Bar dataKey="femmine" fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} name="Donne" />
           </BarChart>
         </ResponsiveContainer>
       </motion.div>
