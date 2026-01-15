@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Users, MapPin, Building2, UserPlus } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 import {
   DataRecord,
@@ -66,6 +66,11 @@ export function DistribuzioneDashboard(props: DistribuzioneDashboardProps) {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
+
+  // Quando cambia la provincia, resetta automaticamente la selezione del comune
+  useEffect(() => {
+    setSelectedCity(null);
+  }, [selectedProvince]);
 
   /** 🔥 KPI nuove assunzioni */
   const amministratiMeseCorrente = useMemo(() => {
@@ -175,6 +180,7 @@ export function DistribuzioneDashboard(props: DistribuzioneDashboardProps) {
                 setSelectedProvince(null);
                 setSelectedCity(null);
               }}
+              onCitySelect={setSelectedCity}
             />
           </div>
 

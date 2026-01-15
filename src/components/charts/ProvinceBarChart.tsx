@@ -54,7 +54,7 @@ export function ProvinceBarChart({ data, maxItems = 15, onProvinceClick, onRegio
         .map(([regione, stats]) => ({
           regione,
           ...stats,
-          name: regione.length > 12 ? regione.substring(0, 12) + '...' : regione,
+          name: regione.length > 20 ? regione.substring(0, 20) + '...' : regione,
           fullName: regione,
         }))
         .sort((a, b) => b.totale - a.totale)
@@ -66,7 +66,7 @@ export function ProvinceBarChart({ data, maxItems = 15, onProvinceClick, onRegio
         .filter(p => (p.regione || '').toUpperCase() === selectedRegion.toUpperCase())
         .map(p => ({
           ...p,
-          name: p.provincia.length > 12 ? p.provincia.substring(0, 12) + '...' : p.provincia,
+          name: p.provincia.length > 20 ? p.provincia.substring(0, 20) + '...' : p.provincia,
           fullName: p.provincia,
         }))
         .sort((a, b) => b.totale - a.totale)
@@ -80,7 +80,7 @@ export function ProvinceBarChart({ data, maxItems = 15, onProvinceClick, onRegio
     const maschi = provinceStats?.maschi || 0;
     const femmine = provinceStats?.femmine || 0;
     return comuni.map(c => ({
-      name: c.name.length > 14 ? c.name.substring(0, 14) + '...' : c.name,
+      name: c.name.length > 20 ? c.name.substring(0, 20) + '...' : c.name,
       fullName: c.name,
       totale: Math.round(totale * (c.ratio ?? 0.5)),
       maschi: Math.round(maschi * (c.ratio ?? 0.5)),
@@ -181,12 +181,12 @@ export function ProvinceBarChart({ data, maxItems = 15, onProvinceClick, onRegio
           </motion.span>
         )}
       </div>
-      <div className="h-[390px]">
+      <div className="h-[420px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={chartData}
             layout="vertical"
-            margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+            margin={{ top: 20, right: 0, left: -40, bottom: 0 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" horizontal={false} opacity={0.5} />
             <XAxis 
@@ -199,7 +199,7 @@ export function ProvinceBarChart({ data, maxItems = 15, onProvinceClick, onRegio
             <YAxis 
               dataKey="name" 
               type="category" 
-              width={100}
+              width={140}
               tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
               axisLine={false}
               tickLine={false}

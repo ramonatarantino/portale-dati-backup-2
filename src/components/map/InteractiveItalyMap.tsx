@@ -25,6 +25,7 @@ interface InteractiveItalyMapProps {
   onProvinceSelect?: (province: string | null) => void;
   onRegionSelect?: (region: string) => void;
   onResetRegion?: () => void;
+  onCitySelect?: (city: string) => void;
 }
 
 type ViewLevel = 'italy' | 'region' | 'province' | 'city';
@@ -47,7 +48,8 @@ export function InteractiveItalyMap({
   cityToZoom,
   onProvinceSelect,
   onRegionSelect,
-  onResetRegion
+  onResetRegion,
+  onCitySelect
 }: InteractiveItalyMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
@@ -127,7 +129,7 @@ export function InteractiveItalyMap({
     } else if ((viewLevel === 'province' || viewLevel === 'city') && selectedProvince) {
       renderCityMarkers(selectedProvince);
     }
-  }, [data, isLoaded, viewLevel, selectedRegion, dataMap, regionTotals]);
+  }, [data, isLoaded, viewLevel, selectedRegion, dataMap, regionTotals, cityToZoom]);
 
   // Handle region selection coming from bar chart: zoom and switch view
   useEffect(() => {
@@ -168,7 +170,7 @@ export function InteractiveItalyMap({
       // Zoom to the selected province from italy view
       map.current.flyTo({
         center: coords.coordinates,
-        zoom: coords.zoom + 1,
+        zoom: coords.zoom - 1,
         duration: 1000
       });
     } else if (viewLevel === 'region') {
@@ -176,7 +178,7 @@ export function InteractiveItalyMap({
       setViewLevel('province');
       map.current.flyTo({
         center: coords.coordinates,
-        zoom: coords.zoom + 1,
+        zoom: coords.zoom - 1,
         duration: 1000
       });
     }
@@ -258,26 +260,50 @@ export function InteractiveItalyMap({
   };
 
   const renderCityMarkers = (provinceName: string) => {
+    const provinceStats = dataMap.get(provinceName.toUpperCase());
     const comuni = getComuniByProvince(provinceName);
+    const provinceTotale = provinceStats?.totale || 0;
+
     comuni.forEach(com => {
+      const isSelected = cityToZoom && com.name.toUpperCase() === cityToZoom.toUpperCase();
+      const markerColor = isSelected ? 'hsl(43, 96%, 56%)' : 'hsl(212, 70%, 18%)';
+      const markerColorDark = isSelected ? 'hsl(40, 90%, 40%)' : 'hsl(212, 70%, 28%)';
+      const shadowColor = isSelected ? 'hsl(43, 96%, 56%, 0.4)' : 'hsl(212, 70%, 18%, 0.4)';
+      const textColor = isSelected ? COLORS.white : COLORS.white;
+
+      // Calculate total for this comune
+      const comuneTotale = Math.round(provinceTotale * (com.ratio ?? 0.5));
+      const displayNumber = comuneTotale >= 1000 ? `${Math.round(comuneTotale / 1000)}k` : comuneTotale.toString();
+
       const el = document.createElement('div');
       el.innerHTML = `
         <div style="
           position: relative;
-          width: 28px;
-          height: 28px;
+          width: 36px;
+          height: 36px;
           cursor: pointer;
         ">
           <div style="
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 22px; height: 22px;
-            background: linear-gradient(135deg, ${COLORS.gold}, ${COLORS.goldDark});
+            width: 30px; height: 30px;
+            background: linear-gradient(135deg, ${markerColor}, ${markerColorDark});
             border: 3px solid ${COLORS.white};
             border-radius: 50%;
-            box-shadow: 0 4px 16px ${COLORS.gold}40;
+            box-shadow: 0 4px 16px ${shadowColor};
           "></div>
+          <div style="
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            font-weight: bold;
+            color: ${textColor};
+            text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+            pointer-events: none;
+            user-select: none;
+          ">${displayNumber}</div>
         </div>
       `;
       const marker = new maplibregl.Marker({ element: el })
@@ -285,7 +311,7 @@ export function InteractiveItalyMap({
         .addTo(map.current!);
       el.addEventListener('click', () => {
         setViewLevel('city');
-        onProvinceSelect?.(provinceName);
+        onCitySelect?.(com.name);
         map.current?.flyTo({ center: com.coordinates, zoom: com.zoom, duration: 900 });
       });
       markersRef.current.push(marker);
@@ -502,7 +528,7 @@ export function InteractiveItalyMap({
     onProvinceSelect?.(provinceName);
     map.current?.flyTo({
       center: coords.coordinates,
-      zoom: coords.zoom + 1,
+      zoom: coords.zoom - 1,
       duration: 1000
     });
   };
