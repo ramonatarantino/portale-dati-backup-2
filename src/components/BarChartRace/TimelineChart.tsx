@@ -5,121 +5,218 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Area,
-  AreaChart,
+  Line,
+  LineChart,
 } from 'recharts';
-import { TimePoint, CategoryData } from '@/data/barChartData';
+import { TimePoint, amministrazioni, tipiSpesa, spesaColorMap } from '@/data/barChartData';
 
 interface TimelineChartProps {
   data: TimePoint[];
-  categories: CategoryData[];
+  selectedAmministrazioni: string[];
   progress: number;
-  onSeek: (progress: number) => void;
+  onSeek?: (progress: number) => void;
 }
 
-// Interpolate between two values
-const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+// Phase constants
+const INITIAL_PHASE_END = 0.02;
+
+// Ultra-smooth cubic easing
+const smoothEase = (t: number) => {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+};
+
+
+// Ultra-smooth interpolation
+const smoothLerp = (a: number, b: number, t: number) => {
+  const smoothT = smoothEase(t);
+  return a + (b - a) * smoothT;
+};
+
+interface LineConfig {
+  id: string;
+  name: string;
+  color: string;
+  ammId: string;
+  spesa: string;
+}
 
 export function TimelineChart({
   data,
-  categories,
+  selectedAmministrazioni,
   progress,
+  onSeek,
 }: TimelineChartProps) {
-  const chartCategories = categories.slice(0, 3);
+  // Generate line configurations for ALL spese of selected amministrazioni
+  const lineConfigs = useMemo(() => {
+    const configs: LineConfig[] = [];
+    selectedAmministrazioni.forEach((ammId) => {
+      const amm = amministrazioni.find(a => a.id === ammId);
+      if (!amm) return;
+      
+      // All expense types for each amministrazione
+      tipiSpesa.forEach((spesa) => {
+        configs.push({
+          id: `${ammId}-${spesa}`,
+          name: `${amm.label.split(' ').slice(-1)[0]} - ${spesa}`,
+          color: spesaColorMap[spesa] || '#4A80D8',
+          ammId,
+          spesa,
+        });
+      });
+    });
+    return configs;
+  }, [selectedAmministrazioni]);
 
-  // Create data with all months visible, but values only up to current progress
+  // Create smooth progressive data with interpolated points between months
   const chartData = useMemo(() => {
-    const totalPoints = data.length;
-    const currentPosition = progress * (totalPoints - 1);
-    const currentIndex = Math.floor(currentPosition);
-    const fraction = currentPosition - currentIndex;
+    const isInitialPhase = progress < INITIAL_PHASE_END;
+    
+    // Effective timeline progress (0 during initial phase, then 0..1)
+    const effectiveProgress = isInitialPhase 
+      ? 0 
+      : (progress - INITIAL_PHASE_END) / (1 - INITIAL_PHASE_END);
+    
+    // Initial growth multiplier (0 to 1 during first 2%) - ultra-smooth quintic
+    const initialGrowth = isInitialPhase
+      ? smoothEase(smoothEase(progress / INITIAL_PHASE_END))
+      : 1;
+    
+    // Calculate the exact position in the timeline (continuous float)
+    const totalMonths = data.length - 1;
+    const exactPosition = effectiveProgress * totalMonths;
+    const currentMonthIndex = Math.floor(exactPosition);
+    const monthFraction = exactPosition - currentMonthIndex;
+    
+    // Apply easing for smoother transitions
+    const easedFraction = smoothEase(monthFraction);
 
-    return data.map((point, i) => {
+    // Generate interpolated data points - add synthetic intermediate points
+    const result: Record<string, string | number | null>[] = [];
+    
+    data.forEach((point, i) => {
       const entry: Record<string, string | number | null> = {
-        name: point.month.substring(0, 3),
+        name: `${point.month.substring(0, 3)} ${point.year.toString().slice(-2)}`,
         index: i,
       };
 
-      if (i < currentIndex) {
-        // Full data for past months
-        chartCategories.forEach((cat) => {
-          entry[cat.id] = point.values[cat.id] || 0;
-        });
-      } else if (i === currentIndex) {
-        // Current month - full values
-        chartCategories.forEach((cat) => {
-          entry[cat.id] = point.values[cat.id] || 0;
-        });
-      } else if (i === currentIndex + 1 && fraction > 0) {
-        // Next month - interpolated values
-        const prevPoint = data[currentIndex];
-        chartCategories.forEach((cat) => {
-          const prevValue = prevPoint.values[cat.id] || 0;
-          const currValue = point.values[cat.id] || 0;
-          entry[cat.id] = lerp(prevValue, currValue, fraction);
-        });
-      } else {
-        // Future months - null (no line drawn)
-        chartCategories.forEach((cat) => {
-          entry[cat.id] = null;
-        });
-      }
+      lineConfigs.forEach((config) => {
+        const { ammId, spesa } = config;
+        const baseValue = point.values[ammId]?.[spesa] || 0;
+        
+        if (i === 0) {
+          // First month: apply initial growth during ramp phase
+          entry[config.id] = baseValue * initialGrowth;
+        } else if (i < currentMonthIndex) {
+          // Past months - fully revealed
+          entry[config.id] = baseValue;
+        } else if (i === currentMonthIndex) {
+          // Current month - fully revealed
+          entry[config.id] = baseValue;
+        } else if (i === currentMonthIndex + 1) {
+          // Next month - smoothly interpolate
+          const prevPoint = data[i - 1];
+          const prevValue = prevPoint.values[ammId]?.[spesa] || 0;
+          entry[config.id] = smoothLerp(prevValue, baseValue, easedFraction);
+        } else {
+          // Future - null (not yet reached)
+          entry[config.id] = null;
+        }
+      });
 
-      return entry;
+      result.push(entry);
     });
-  }, [data, chartCategories, progress]);
+
+    return result;
+  }, [data, lineConfigs, progress]);
+
+  if (selectedAmministrazioni.length === 0) {
+    return (
+      <div className="bg-card rounded-lg border border-border p-4 mt-6 text-center text-muted-foreground">
+        Seleziona almeno un'amministrazione per visualizzare il grafico
+      </div>
+    );
+  }
+
+  // Handle click on chart to seek
+  const handleChartClick = (e: { activeLabel?: string; activeTooltipIndex?: number }) => {
+    if (onSeek && e.activeTooltipIndex !== undefined && data.length > 1) {
+      const monthIndex = e.activeTooltipIndex;
+      // Convert month index to progress (after initial phase)
+      const effectiveProgress = monthIndex / (data.length - 1);
+      const newProgress = INITIAL_PHASE_END + effectiveProgress * (1 - INITIAL_PHASE_END);
+      onSeek(Math.min(Math.max(newProgress, 0), 1));
+    }
+  };
 
   return (
     <div className="bg-card rounded-lg border border-border p-4 mt-6">
       <h3 className="text-sm font-medium text-muted-foreground mb-4">
-        Andamento nel tempo
+        Andamento nel tempo - Tutte le voci ({lineConfigs.length} serie)
+        {onSeek && <span className="ml-2 text-xs opacity-60">(clicca per navigare)</span>}
       </h3>
-      <ResponsiveContainer width="100%" height={200}>
-        <AreaChart data={chartData}>
-          <defs>
-            {chartCategories.map((cat) => (
-              <linearGradient key={`gradient-${cat.id}`} id={`gradient-${cat.id}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={cat.color} stopOpacity={0.6}/>
-                <stop offset="95%" stopColor={cat.color} stopOpacity={0.1}/>
-              </linearGradient>
-            ))}
-          </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.5} />
+      <ResponsiveContainer width="100%" height={320}>
+        <LineChart data={chartData} onClick={handleChartClick} style={{ cursor: onSeek ? 'pointer' : 'default' }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
           <XAxis
             dataKey="name"
             stroke="hsl(var(--muted-foreground))"
-            fontSize={12}
+            fontSize={10}
             interval={0}
+            angle={-45}
+            textAnchor="end"
+            height={50}
+            tick={{ fill: 'hsl(var(--muted-foreground))' }}
           />
           <YAxis
             stroke="hsl(var(--muted-foreground))"
-            fontSize={12}
+            fontSize={11}
             tickFormatter={(value) => `€${(value / 1000000).toFixed(0)}M`}
+            width={55}
           />
           <Tooltip
             contentStyle={{
               backgroundColor: 'hsl(var(--card))',
               border: '1px solid hsl(var(--border))',
               borderRadius: '8px',
+              fontSize: '11px',
+              maxHeight: '300px',
+              overflow: 'auto',
             }}
-            formatter={(value: number | null) => value !== null ? [`€${(value / 1000000).toFixed(1)}M`, ''] : ['', '']}
+            formatter={(value: number | null, name: string) => {
+              if (value === null) return ['', ''];
+              const config = lineConfigs.find(c => c.id === name);
+              return [`€${(value / 1000000).toFixed(2)}M`, config?.name || name];
+            }}
           />
-          {chartCategories.map((cat) => (
-            <Area
-              key={cat.id}
+          {lineConfigs.map((config) => (
+            <Line
+              key={config.id}
               type="monotone"
-              dataKey={cat.id}
-              stroke={cat.color}
-              strokeWidth={3}
-              fill={`url(#gradient-${cat.id})`}
+              dataKey={config.id}
+              stroke={config.color}
+              strokeWidth={1.5}
               dot={false}
-              name={cat.label}
+              name={config.id}
               isAnimationActive={false}
               connectNulls={false}
+              strokeOpacity={0.75}
             />
           ))}
-        </AreaChart>
+        </LineChart>
       </ResponsiveContainer>
+      
+      {/* Mini legend for spese colors */}
+      <div className="flex flex-wrap gap-2 mt-4 pt-3 border-t border-border">
+        {tipiSpesa.map((spesa) => (
+          <div key={spesa} className="flex items-center gap-1.5 text-xs">
+            <span 
+              className="w-3 h-2 rounded-sm" 
+              style={{ backgroundColor: spesaColorMap[spesa] }}
+            />
+            <span className="text-muted-foreground">{spesa}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

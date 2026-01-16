@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { LucideIcon, ArrowUp } from 'lucide-react';
+import { LucideIcon, ArrowUp, ArrowDown, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface StatCardProps {
@@ -82,18 +82,33 @@ export function StatCard({
             <Icon className="w-6 h-6 text-primary" />
           </div>
 
-          {/* FRECCIA VERDE CRESCENTE */}
-          {trend !== undefined && trend > 0 && (
+          {/* TREND INDICATOR */}
+          {trend !== undefined && (
             <motion.div
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               className={cn(
                 'flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-full',
-                'bg-green-500/10 text-green-600'
+                trend > 0
+                  ? 'bg-green-500/10 text-green-600'
+                  : trend < 0
+                  ? 'bg-red-500/10 text-red-600'
+                  : 'bg-gray-500/10 text-gray-600'
               )}
             >
-              <ArrowUp className="w-3.5 h-3.5" />
-              +{trend.toFixed(1)}%
+              {trend > 0 ? (
+                <>
+                  <ArrowUp className="w-3.5 h-3.5" />
+                  +{trend.toFixed(1)}%
+                </>
+              ) : trend < 0 ? (
+                <>
+                  <ArrowDown className="w-3.5 h-3.5" />
+                  {trend.toFixed(1)}%
+                </>
+              ) : (
+                <span className="text-sm font-bold">=</span>
+              )}
             </motion.div>
           )}
         </div>
@@ -109,7 +124,7 @@ export function StatCard({
             <p className="text-xs text-muted-foreground">{description}</p>
           )}
 
-          {trend !== undefined && trend > 0 && (
+          {trend !== undefined && (
             <p className="text-[11px] text-muted-foreground">
               rispetto al mese precedente
             </p>

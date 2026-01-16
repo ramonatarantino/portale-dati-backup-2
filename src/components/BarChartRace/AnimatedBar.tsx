@@ -9,6 +9,8 @@ interface AnimatedBarProps {
   maxValue: number;
   barHeight?: number;
   gap?: number;
+  sigla?: string;
+  siglaColor?: string;
 }
 
 export function AnimatedBar({
@@ -17,104 +19,80 @@ export function AnimatedBar({
   color,
   rank,
   maxValue,
-  barHeight = 36,
-  gap = 6,
+  barHeight = 28,
+  gap = 3,
+  sigla,
+  siglaColor,
 }: AnimatedBarProps) {
-  const widthPercentage = (value / maxValue) * 100;
+  const widthPercentage = maxValue > 0 ? (value / maxValue) * 100 : 0;
+  const hasValue = value > 0;
   const translateY = rank * (barHeight + gap);
   const prevRankRef = useRef(rank);
-  const prevValueRef = useRef(value);
   const [isOvertaking, setIsOvertaking] = useState(false);
-  const [isGrowing, setIsGrowing] = useState(false);
 
+  // Detect overtaking
   useEffect(() => {
     if (rank < prevRankRef.current) {
       setIsOvertaking(true);
-      const timeout = setTimeout(() => setIsOvertaking(false), 800);
+      const timeout = setTimeout(() => setIsOvertaking(false), 600);
       prevRankRef.current = rank;
       return () => clearTimeout(timeout);
     }
     prevRankRef.current = rank;
   }, [rank]);
 
-  useEffect(() => {
-    if (value > prevValueRef.current * 1.005) {
-      setIsGrowing(true);
-      const timeout = setTimeout(() => setIsGrowing(false), 150);
-      return () => clearTimeout(timeout);
-    }
-    prevValueRef.current = value;
-  }, [value]);
-
-  // Determine if this is a dark or light color for text contrast
-  const isLightColor = color.startsWith('#D') || color.startsWith('#E') || color.startsWith('#F');
-  const textColor = isLightColor ? '#333333' : '#ffffff';
-
   return (
     <div
-      className="absolute left-0 right-0 flex items-center gap-3"
+      className="absolute left-0 right-0 flex items-center gap-2"
       style={{
         transform: `translateY(${translateY}px)`,
         height: `${barHeight}px`,
-        transition: 'transform 300ms cubic-bezier(0.25, 0.1, 0.25, 1)',
+        // No CSS transition - updates are already smooth at 60fps from requestAnimationFrame
       }}
     >
-      <div 
-        className="w-36 md:w-44 text-sm font-medium text-foreground truncate text-right"
-      >
-        {label}
-      </div>
-      <div className="flex-1 flex items-center gap-3 relative">
-        {/* Overtaking highlight glow */}
-        {isOvertaking && (
-          <div
-            className="absolute h-10 rounded-r-sm blur-lg"
-            style={{
-              width: `${Math.max(widthPercentage + 5, 5)}%`,
-              backgroundColor: '#FFD700',
-              opacity: 0.7,
-              animation: 'pulse-glow 0.8s ease-out',
-              zIndex: 10,
+      {/* Label with sigla */}
+      <div className="w-36 md:w-44 flex items-center justify-end gap-1 pr-1">
+        {sigla && (
+          <span 
+            className="text-[10px] font-semibold px-1.5 py-0.5 rounded text-white"
+            style={{ 
+              backgroundColor: siglaColor || color,
             }}
-          />
+          >
+            {sigla}
+          </span>
         )}
+        <span className="text-xs font-medium text-foreground truncate">
+          {label}
+        </span>
+      </div>
+      
+      <div className="flex-1 flex items-center gap-2 relative">
         {/* Main bar */}
         <div
-          className="h-7 rounded-r-sm relative overflow-hidden flex items-center justify-end pr-3"
+          className="h-5 rounded-r-sm relative overflow-hidden flex items-center"
           style={{
-            width: `${Math.max(widthPercentage, 3)}%`,
+            // Linear mapping (value -> % width) + tiny pixel minimum for visibility.
+            // This keeps ordering coherent: if A > B then bar(A) is never shorter/invisible than bar(B).
+            width: `${widthPercentage}%`,
+            minWidth: hasValue ? 3 : 0,
             backgroundColor: color,
-            transition: 'width 50ms linear, transform 150ms ease-out',
-            transform: isOvertaking ? 'scaleY(1.15) scaleX(1.02)' : isGrowing ? 'scaleY(1.05)' : 'scaleY(1)',
-            boxShadow: isOvertaking 
-              ? `0 0 25px ${color}, 0 0 50px #FFD70080` 
-              : `0 1px 4px ${color}30`,
-            zIndex: isOvertaking ? 20 : 1,
+            transform: isOvertaking 
+              ? 'scaleY(1.05)'
+              : 'scaleY(1)',
+            transition: 'transform 150ms ease-out',
+            boxShadow: `0 1px 3px ${color}30`,
+            zIndex: isOvertaking ? 2 : 1,
           }}
         >
-          {/* Shimmer effect */}
-          <div 
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-            style={{
-              animation: 'shimmer 2s infinite',
-              transform: 'skewX(-20deg)',
-            }}
-          />
-          {/* Overtaking flash effect */}
-          {isOvertaking && (
-            <div 
-              className="absolute inset-0 bg-gradient-to-r from-white/50 via-yellow-300/40 to-transparent"
-              style={{
-                animation: 'fade-out 0.8s ease-out forwards',
-              }}
-            />
-          )}
         </div>
+        
+        {/* Value display */}
         <span
-          className="text-sm font-bold min-w-24 tabular-nums"
+          className="text-xs font-bold min-w-20 tabular-nums whitespace-nowrap"
           style={{ 
             color,
-            transition: 'color 300ms ease',
+            transition: 'color 200ms ease',
           }}
         >
           {formatNumber(Math.round(value))}

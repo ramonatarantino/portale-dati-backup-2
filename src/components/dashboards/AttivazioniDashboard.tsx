@@ -495,6 +495,7 @@ export function AttivazioniDashboard({
             <Bar dataKey="attivazioni" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} name="Attivazioni" />
             <Bar dataKey="cessazioni" fill="hsl(var(--accent))" radius={[0, 4, 4, 0]} name="Cessazioni" />
           </BarChart>
+          
         </ResponsiveContainer>
       </motion.div>
 

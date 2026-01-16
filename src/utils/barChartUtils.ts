@@ -1,4 +1,4 @@
-import { TimePoint, CategoryData } from '@/data/barChartData';
+import { TimePoint, amministrazioni, tipiSpesa, spesaColorMap } from '@/data/barChartData';
 
 export interface InterpolatedBar {
   id: string;
@@ -6,37 +6,106 @@ export interface InterpolatedBar {
   value: number;
   color: string;
   rank: number;
+  amministrazioneId: string;
+  sigla: string;
+  siglaColor: string;
 }
+
+// Ultra-smooth cubic easing
+const smoothEase = (t: number) => {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+};
+
+// Quintic easing for bar growth - slower initial growth
+const quinticEase = (t: number) => {
+  return t < 0.5 ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2;
+};
+
+// Smooth cubic easing for initial ramp-up (gradual, no jumps)
+const initialRampEase = (t: number) => {
+  // Cubic ease-in-out for smooth gradual growth
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+};
 
 export function interpolateValues(
   data: TimePoint[],
   progress: number,
-  categories: CategoryData[]
+  selectedAmministrazioni: string[],
+  selectedTipiSpesa: string[] = [...tipiSpesa]
 ): InterpolatedBar[] {
-  const totalFrames = data.length - 1;
-  const currentFrame = progress * totalFrames;
-  const frameIndex = Math.floor(currentFrame);
-  const frameFraction = currentFrame - frameIndex;
+  if (data.length === 0 || selectedAmministrazioni.length === 0 || selectedTipiSpesa.length === 0) return [];
+  
+  // Phase 1: 0-0% = initial ramp (bars grow from 0 to first month value, time stays at month 0)
+  // Phase 2: 0%-100% = normal timeline progression
+  const INITIAL_PHASE_END = 0;
+  
+  const isInitialPhase = progress < INITIAL_PHASE_END;
+  
+  // During initial phase, time stays at 0; after, time progresses normally
+  const effectiveProgress = isInitialPhase 
+    ? 0 
+    : (progress - INITIAL_PHASE_END) / (1 - INITIAL_PHASE_END);
+  
+  // Micro-steps for smooth interpolation (300 steps per month)
+  const microStepsPerMonth = 300;
+  const totalMicroSteps = (data.length - 1) * microStepsPerMonth;
+  const currentMicroStep = effectiveProgress * totalMicroSteps;
+  
+  const monthIndex = Math.floor(currentMicroStep / microStepsPerMonth);
+  const microFraction = (currentMicroStep % microStepsPerMonth) / microStepsPerMonth;
+  
+  const frameIndex = Math.min(monthIndex, data.length - 1);
+  const nextFrameIndex = Math.min(frameIndex + 1, data.length - 1);
+  
+  const currentData = data[frameIndex];
+  const nextData = data[nextFrameIndex];
+  
+  const easedFraction = smoothEase(microFraction);
+  
+  // Initial ramp: during first 8%, bars grow from 0 to first month value
+  // Uses exponential easing for dramatic ramp-up effect
+  const initialGrowth = isInitialPhase 
+    ? initialRampEase(progress / INITIAL_PHASE_END)
+    : 1;
 
-  const currentData = data[Math.min(frameIndex, data.length - 1)];
-  const nextData = data[Math.min(frameIndex + 1, data.length - 1)];
+  const interpolatedValues: InterpolatedBar[] = [];
 
-  const interpolatedValues = categories.map((cat) => {
-    const currentValue = currentData.values[cat.id] || 0;
-    const nextValue = nextData.values[cat.id] || 0;
-    const value = currentValue + (nextValue - currentValue) * frameFraction;
+  selectedAmministrazioni.forEach((ammId) => {
+    const amm = amministrazioni.find(a => a.id === ammId);
+    if (!amm) return;
 
-    return {
-      id: cat.id,
-      label: cat.label,
-      value,
-      color: cat.color,
-      rank: 0,
-    };
+    // Filter by selected expense types
+    const filteredTipiSpesa = tipiSpesa.filter(spesa => selectedTipiSpesa.includes(spesa));
+
+    filteredTipiSpesa.forEach((spesa) => {
+      const currentValue = currentData.values[ammId]?.[spesa] || 0;
+      const nextValue = nextData.values[ammId]?.[spesa] || 0;
+      const rawValue = currentValue + (nextValue - currentValue) * easedFraction;
+      const value = rawValue * initialGrowth;
+
+      interpolatedValues.push({
+        id: `${ammId}-${spesa}`,
+        label: spesa,
+        value,
+        color: spesaColorMap[spesa] || '#4A80D8',
+        rank: 0,
+        amministrazioneId: ammId,
+        sigla: amm.sigla,
+        siglaColor: amm.color,
+      });
+    });
   });
 
-  // Sort by value descending and assign ranks
-  interpolatedValues.sort((a, b) => b.value - a.value);
+  // Always sort by value (descending) - this allows overtakes during initial growth
+  // Use id as tiebreaker for stable sorting when values are equal
+  interpolatedValues.sort((a, b) => {
+    const diff = b.value - a.value;
+    if (Math.abs(diff) < 0.01) {
+      return a.id.localeCompare(b.id);
+    }
+    return diff;
+  });
+  
   interpolatedValues.forEach((item, index) => {
     item.rank = index;
   });
@@ -48,7 +117,15 @@ export function getCurrentTimePoint(
   data: TimePoint[],
   progress: number
 ): { month: string; year: number } {
-  const index = Math.floor(progress * (data.length - 1));
+  if (data.length === 0) return { month: '', year: 0 };
+  
+  // During initial phase (0-0%), stay at first month
+  const INITIAL_PHASE_END = 0;
+  const effectiveProgress = progress < INITIAL_PHASE_END
+    ? 0 
+    : (progress - INITIAL_PHASE_END) / (1 - INITIAL_PHASE_END);
+  
+  const index = Math.floor(effectiveProgress * (data.length - 1));
   const safeIndex = Math.min(index, data.length - 1);
   return {
     month: data[safeIndex].month,
