@@ -97,8 +97,8 @@ export function DataTable({ data }: DataTableProps) {
   return (
     <div className="glass-card rounded-xl p-6 animate-fade-up" style={{ animationDelay: '700ms' }}>
       {/* Dataset selector and info */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6 pb-4 border-b border-border">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-6 pb-4 border-b border-border">
+        <div className="flex flex-col sm:flex-row sm:items-end gap-4">
           <div>
             <label className="text-sm font-medium text-muted-foreground mb-2 block">
               Seleziona Dataset
@@ -118,7 +118,7 @@ export function DataTable({ data }: DataTableProps) {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
           {/* Download buttons */}
           <div className="flex gap-2">
             <Button variant="outline" size="sm" className="flex items-center gap-2">

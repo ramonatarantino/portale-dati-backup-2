@@ -103,12 +103,6 @@ export function DistribuzioneDashboard(props: DistribuzioneDashboardProps) {
 
   return (
     <div className="space-y-8">
-      <FilterPanel
-        filters={filters}
-        onFiltersChange={onFiltersChange}
-        availableOptions={availableOptions}
-      />
-
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -128,6 +122,13 @@ export function DistribuzioneDashboard(props: DistribuzioneDashboardProps) {
 
         {/* Contenuto principale */}
         <div className="flex-1 space-y-8">
+          {/* Filters */}
+          <FilterPanel
+            filters={filters}
+            onFiltersChange={onFiltersChange}
+            availableOptions={availableOptions}
+          />
+
           {/* KPI Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard title="Totale Amministrati" value={stats.totale} icon={Users} />

@@ -21,6 +21,8 @@ interface FilterPanelProps {
     fasce: string[];
     anni?: number[];
     mesi?: number[];
+    comparto?: string[];
+    provincia?: string[];
   };
 }
 
@@ -29,7 +31,9 @@ export function FilterPanel({ filters, onFiltersChange, availableOptions }: Filt
     filters.province.length + 
     filters.amministrazioni.length + 
     filters.sesso.length + 
-    filters.fasce.length;
+    filters.fasce.length +
+    (filters.comparto?.length || 0) +
+    (filters.provincia?.length || 0);
 
   const updateFilter = <K extends keyof FilterState>(key: K, value: FilterState[K]) => {
     onFiltersChange({ ...filters, [key]: value });
@@ -43,6 +47,8 @@ export function FilterPanel({ filters, onFiltersChange, availableOptions }: Filt
       fasce: [],
       anno: filters.anno,
       mese: filters.mese,
+      comparto: [],
+      provincia: [],
     });
   };
 
@@ -96,6 +102,28 @@ export function FilterPanel({ filters, onFiltersChange, availableOptions }: Filt
         selected={filters.fasce}
         onToggle={(value) => updateFilter('fasce', toggleArrayValue(filters.fasce, value))}
       />
+
+      {/* Comparto Filter */}
+      {availableOptions.comparto && (
+        <FilterDropdown
+          label="Comparto"
+          selectedCount={filters.comparto?.length || 0}
+          options={availableOptions.comparto}
+          selected={filters.comparto || []}
+          onToggle={(value) => updateFilter('comparto', toggleArrayValue(filters.comparto || [], value))}
+        />
+      )}
+
+      {/* Provincia Filter */}
+      {availableOptions.provincia && (
+        <FilterDropdown
+          label="Provincia"
+          selectedCount={filters.provincia?.length || 0}
+          options={availableOptions.provincia}
+          selected={filters.provincia || []}
+          onToggle={(value) => updateFilter('provincia', toggleArrayValue(filters.provincia || [], value))}
+        />
+      )}
 
         {activeFiltersCount > 0 && (
           <Button

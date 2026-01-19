@@ -34,6 +34,7 @@ import { AccessiDashboard } from "@/components/dashboards/AccessiDashboard";
 import { AttivazioniDashboard } from "@/components/dashboards/AttivazioniDashboard";
 import { SpesaDashboard } from "@/components/dashboards/SpesaDashboard";
 import { AmministrazioniDashboard } from "@/components/dashboards/AmministrazioniDashboard";
+import RapportiDashboard from "@/components/dashboards/RapportiDashboard";
 
 const Dashboard = () => {
   const [searchParams] = useSearchParams();
@@ -172,14 +173,7 @@ const Dashboard = () => {
         );
       case "attivazioni":
         return (
-          <AttivazioniDashboard 
-            data={mockData.attivazioni} 
-            selectedYear={filters.anno} 
-            selectedMonth={filters.mese}
-            availableYears={availableYears}
-            availableMonths={availableMonths}
-            onCalendarSelect={handleCalendarSelect}
-          />
+          <RapportiDashboard />
         );
       case "spesa":
         return (

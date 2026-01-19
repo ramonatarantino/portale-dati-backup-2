@@ -7,6 +7,14 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Determine active page
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
+  const isActive = (path: string) => {
+    if (path === '/') return currentPath === '/';
+    if (path.startsWith('#')) return false; // Skip anchor links for now
+    return currentPath.startsWith(path);
+  };
+
   return (
     <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-md border-b border-border shadow-sm">
       <div className="container mx-auto px-4">
@@ -38,13 +46,34 @@ const Header = () => {
 
           {/* Navigation - Desktop */}
           <nav className="hidden md:flex items-center gap-6">
-            <a href="/" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+            <a href="/" className={`relative text-sm font-medium transition-colors ${
+              isActive('/') 
+                ? 'text-primary' 
+                : 'text-foreground hover:text-primary'
+            }`}>
+              {isActive('/') && (
+                <div className="absolute -top-1 left-0 right-0 h-0.5 bg-primary rounded-full"></div>
+              )}
               Home
             </a>
-            <a href="/dashboard" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+            <a href="/dashboard" className={`relative text-sm font-medium transition-colors ${
+              isActive('/dashboard') 
+                ? 'text-primary' 
+                : 'text-foreground hover:text-primary'
+            }`}>
+              {isActive('/dashboard') && (
+                <div className="absolute -top-1 left-0 right-0 h-0.5 bg-primary rounded-full"></div>
+              )}
               Open Data
             </a>
-            <a href="/numeridag" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+            <a href="/numeridag" className={`relative text-sm font-medium transition-colors ${
+              isActive('/numeridag') 
+                ? 'text-primary' 
+                : 'text-foreground hover:text-primary'
+            }`}>
+              {isActive('/numeridag') && (
+                <div className="absolute -top-1 left-0 right-0 h-0.5 bg-primary rounded-full"></div>
+              )}
               Numeri DAG
             </a>
             <a href="#news" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
@@ -78,16 +107,37 @@ const Header = () => {
               />
             </div>
             <nav className="flex flex-col gap-3">
-              <a href="/" className="text-sm font-medium text-foreground hover:text-primary transition-colors py-2">
+              <a href="/" className={`relative py-2 text-sm font-medium transition-colors ${
+                isActive('/') 
+                  ? 'text-primary' 
+                  : 'text-foreground hover:text-primary'
+              }`}>
+                {isActive('/') && (
+                  <div className="absolute -top-1 left-0 right-0 h-0.5 bg-primary rounded-full"></div>
+                )}
                 Home
               </a>
-              <a href="/dashboard" className="text-sm font-medium text-foreground hover:text-primary transition-colors py-2">
+              <a href="/dashboard" className={`relative py-2 text-sm font-medium transition-colors ${
+                isActive('/dashboard') 
+                  ? 'text-primary' 
+                  : 'text-foreground hover:text-primary'
+              }`}>
+                {isActive('/dashboard') && (
+                  <div className="absolute -top-1 left-0 right-0 h-0.5 bg-primary rounded-full"></div>
+                )}
                 Open Data
               </a>
-              <a href="/numeridag" className="text-sm font-medium text-foreground hover:text-primary transition-colors py-2">
+              <a href="/numeridag" className={`relative py-2 text-sm font-medium transition-colors ${
+                isActive('/numeridag') 
+                  ? 'text-primary' 
+                  : 'text-foreground hover:text-primary'
+              }`}>
+                {isActive('/numeridag') && (
+                  <div className="absolute -top-1 left-0 right-0 h-0.5 bg-primary rounded-full"></div>
+                )}
                 Numeri DAG
               </a>
-              <a href="#news" className="text-sm font-medium text-foreground hover:text-primary transition-colors py-2">
+              <a href="#news" className="py-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
                 News
               </a>
               <Button variant="default" size="sm" className="w-full bg-primary hover:bg-primary-dark mt-2">

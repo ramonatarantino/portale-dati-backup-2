@@ -92,6 +92,8 @@ export interface FilterState {
   fasce: string[];
   anno: number | null;
   mese: number | null;
+  comparto?: string[];
+  provincia?: string[];
 }
 
 // Tipi di dataset disponibili
