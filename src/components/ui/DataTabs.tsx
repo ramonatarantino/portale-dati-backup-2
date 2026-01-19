@@ -86,14 +86,14 @@ const DataTabs = () => {
   const [activeTab, setActiveTab] = useState("opendata");
 
   return (
-    <section id="opendata" className="py-16 md:py-24 bg-background">
-      <div className="container mx-auto px-4">
+    <section id="opendata" className="py-8 md:py-12 bg-background">
+      <div className="max-w-5xl mx-auto px-4">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <div className="flex flex-col items-center mb-12">
+          <div className="flex flex-col items-center mb-6">
             <TabsList className="bg-secondary/50 p-1.5 rounded-xl h-auto">
               <TabsTrigger
                 value="opendata"
-                className="flex items-center gap-2 px-6 py-3 text-sm md:text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-primary rounded-lg transition-all"
+                className="flex items-center gap-2 px-3 py-1.5 text-sm md:text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-primary rounded-lg transition-all"
               >
                 <Database className="h-4 w-4" />
                 Open Data
@@ -101,7 +101,7 @@ const DataTabs = () => {
               <TabsTrigger
                 value="numeri"
                 id="numeri"
-                className="flex items-center gap-2 px-6 py-3 text-sm md:text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-primary rounded-lg transition-all"
+                className="flex items-center gap-2 px-3 py-1.5 text-sm md:text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-primary rounded-lg transition-all"
               >
                 <BarChart3 className="h-4 w-4" />
                 Numeri DAG
@@ -110,8 +110,8 @@ const DataTabs = () => {
           </div>
 
           <TabsContent value="opendata" className="mt-0 focus-visible:outline-none">
-            <div className="max-w-3xl mx-auto text-center mb-12">
-              <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-4">
+            <div className="max-w-2xl mx-auto text-center mb-8">
+              <h2 className="text-lg md:text-2xl font-bold text-foreground mb-4">
                 Open Data
               </h2>
               <p className="text-muted-foreground text-lg mb-6">
@@ -127,7 +127,7 @@ const DataTabs = () => {
                 Vai al Portale Open Data
               </Button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 max-w-4xl mx-auto px-8">
               {openDataCards.map((card, index) => (
                 <FlashCard
                   key={index}
@@ -139,8 +139,8 @@ const DataTabs = () => {
           </TabsContent>
 
           <TabsContent value="numeri" className="mt-0 focus-visible:outline-none">
-            <div className="max-w-3xl mx-auto text-center mb-12">
-              <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-4">
+            <div className="max-w-3xl mx-auto text-center mb-6">
+              <h2 className="text-lg md:text-2xl font-bold text-foreground mb-4">
                 Numeri DAG
               </h2>
               <p className="text-muted-foreground text-lg mb-6">
@@ -156,7 +156,7 @@ const DataTabs = () => {
                 Vai al Portale Numeri DAG
               </Button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 max-w-4xl mx-auto px-8">
               {numeriNoipaCards.map((card, index) => (
                 <FlashCard
                   key={index}

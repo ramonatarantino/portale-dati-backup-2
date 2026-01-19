@@ -106,7 +106,7 @@ const FlashCard = ({ number, question, answer, color, className }: FlashCardProp
     >
       <div
         className={cn(
-          "relative w-full h-[280px] transition-all duration-500 ease-in-out rounded-2xl",
+          "relative w-full h-[200px] transition-all duration-500 ease-in-out rounded-2xl",
           "shadow-lg hover:shadow-2xl border border-gray-200 transform hover:scale-105",
           colorClasses[color].bg,
           colorClasses[color].border,
@@ -117,7 +117,7 @@ const FlashCard = ({ number, question, answer, color, className }: FlashCardProp
         {/* Front - Question */}
         <div
           className={cn(
-            "absolute inset-0 rounded-2xl flex flex-col p-6",
+            "absolute inset-0 rounded-2xl flex flex-col p-4",
             isFlipped ? "opacity-0 pointer-events-none" : "opacity-100",
             "transition-opacity duration-500 ease-in-out",
             "bg-gradient-to-br from-white to-gray-50"
@@ -128,7 +128,7 @@ const FlashCard = ({ number, question, answer, color, className }: FlashCardProp
           </div>
           
           <div className="flex-1 flex flex-col justify-center">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4 leading-tight">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 leading-tight">
               {question}
             </h3>
             <div className="text-sm text-gray-500 flex items-center gap-2">
@@ -148,13 +148,13 @@ const FlashCard = ({ number, question, answer, color, className }: FlashCardProp
           )}
         >
           <div className="flex justify-center mb-4">
-            <span className={cn("text-5xl font-bold", colorClasses[color].accent)}>
+            <span className={cn("text-4xl font-bold", colorClasses[color].accent)}>
               {number}
             </span>
           </div>
           
           <div className="flex-1 flex flex-col justify-center">
-            <p className="text-lg text-gray-700 leading-relaxed font-medium">
+            <p className="text-base text-gray-700 leading-relaxed font-medium">
               {answer}
             </p>
           </div>

@@ -7,18 +7,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-gold/20 rounded-lg flex items-center justify-center">
-                <img
-                  src="/favicon.ico"
-                  alt="MEF Logo"
-                  className="w-6 h-6 object-contain"
-                />
-              </div>
-              <div>
-                <h3 className="font-bold text-lg">MEF</h3>
-                <p className="text-xs text-primary-foreground/70">Patrimonio Informativo</p>
-              </div>
+            <div className="mb-6">
+              <img
+                src="/Logo_mef.svg.png"
+                alt="MEF Logo"
+                className="h-30 w-auto object-contain"
+              />
             </div>
             <p className="text-sm text-primary-foreground/80 mb-4">
               Non accumuliamo dati, creiamo conoscenza condividendo informazioni.
@@ -105,17 +99,6 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-primary-foreground/20 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-4">
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Emblem_of_Italy.svg/100px-Emblem_of_Italy.svg.png"
-                alt="Repubblica Italiana"
-                className="h-10 w-auto opacity-80"
-              />
-              <div className="text-xs text-primary-foreground/60">
-                <p>Ministero dell'Economia e delle Finanze</p>
-                <p>Dipartimento dell'Amministrazione Generale</p>
-              </div>
-            </div>
             <div className="flex flex-wrap justify-center gap-4 text-xs text-primary-foreground/60">
               <a href="#" className="hover:text-gold transition-colors">Privacy Policy</a>
               <span>|</span>
