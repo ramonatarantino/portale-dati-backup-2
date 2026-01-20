@@ -15,47 +15,54 @@ import { useRef } from "react";
 const newsItems = [
   {
     id: 1,
-    category: "MONDO NOIPA",
-    title: "NoiPA sicuri: nuovi strumenti per la protezione dell'accesso",
-    description: "Prosegue l'impegno di NoiPA per la sicurezza informatica e la protezione dei dati personali degli utenti.",
-    date: "16/12/2025",
+    category: "OPEN DATA",
+    title: "Pubblicato LOD Gennaio 2026",
+    description:
+      "Disponibili i LOD di Gennaio 2026 per Modalità di accesso, Struttura organizzativa delle Amministrazioni, Rapporti di lavoro, Trattamento economico e Mobilità degli amministrati.",
+    date: "15/02/2026",
   },
   {
     id: 2,
-    category: "MONDO NOIPA",
-    title: "NoiPA spiega: la tredicesima",
-    description: "La tredicesima: quando viene liquidata e quali sono le voci che la compongono.",
-    date: "02/12/2025",
+    category: "OPEN DATA",
+    title: "Pubblicato LOD Dicembre 2025",
+    description:
+      "Aggiornamento mensile dei LOD relativi a Modalità di accesso, Rapporti di lavoro e Trattamento economico – Dicembre 2025.",
+    date: "15/01/2026",
   },
   {
     id: 3,
-    category: "OPEN DATA",
-    title: "Nuovi dataset disponibili sul patrimonio informativo",
-    description: "Aggiornamento mensile dei dati relativi agli stipendi e alle posizioni della PA.",
-    date: "01/12/2025",
+    category: "NUMERI DAG",
+    title: "Numeri DAG – Gennaio 2026",
+    description:
+      "Pubblicati i principali indicatori quantitativi DAG aggiornati a Gennaio 2026, con focus su consistenza del personale e mobilità.",
+    date: "10/02/2026",
   },
   {
     id: 4,
-    category: "SERVIZI",
-    title: "Aggiornamento dell'area personale",
-    description: "Nuove funzionalità per la consultazione del cedolino e la gestione delle richieste.",
-    date: "28/11/2025",
+    category: "OPEN DATA",
+    title: "Pubblicato LOD Novembre 2025",
+    description:
+      "Rilasciati i LOD di Novembre 2025 per Struttura organizzativa delle Amministrazioni e Trattamento economico.",
+    date: "15/12/2025",
   },
   {
     id: 5,
-    category: "OPEN DATA",
-    title: "Report trimestrale sulla spesa pubblica",
-    description: "Pubblicato il nuovo report con analisi dettagliate sulla distribuzione degli stipendi.",
-    date: "25/11/2025",
+    category: "NUMERI DAG",
+    title: "Numeri DAG – Dicembre 2025",
+    description:
+      "Aggiornamento mensile dei Numeri DAG con dati consolidati su rapporti di lavoro e distribuzione del personale.",
+    date: "10/01/2026",
   },
   {
     id: 6,
-    category: "SERVIZI",
-    title: "Nuova app mobile NoiPA",
-    description: "Disponibile la nuova versione dell'app con interfaccia rinnovata e funzionalità migliorate.",
-    date: "20/11/2025",
+    category: "NUMERI DAG",
+    title: "Numeri DAG – Novembre 2025",
+    description:
+      "Aggiornamento mensile dei Numeri DAG con dati consolidati su rapporti di lavoro e distribuzione del personale.",
+    date: "10/11/2025",
   },
 ];
+
 
 const NewsSection = () => {
   const plugin = useRef(
@@ -76,7 +83,7 @@ const NewsSection = () => {
             </h2>
           </div>
           <Button variant="outline" className="group w-fit border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-            Vedi tutte le news
+            Esplora i LOD
             <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Button>
         </div>
