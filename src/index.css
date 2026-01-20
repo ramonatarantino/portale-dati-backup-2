@@ -1,0 +1,267 @@
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* NoiPA Institutional Colors */
+    --background: 210 20% 98%;
+    --foreground: 215 25% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 15%;
+
+    /* Primary: Deep Institutional Blue */
+    --primary: 215 70% 25%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 215 60% 45%;
+    --primary-dark: 215 75% 18%;
+
+    /* Secondary: Light Blue */
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 215 25% 15%;
+
+    /* Gold Accent */
+    --accent: 42 85% 55%;
+    --accent-foreground: 215 25% 15%;
+    --gold: 42 85% 55%;
+    --gold-light: 45 90% 65%;
+    --gold-dark: 40 80% 45%;
+
+    /* Custom Color Palette */
+    --blue-1: 212 70% 18%;  /* #082B6F */
+    --blue-2: 212 60% 25%;  /* #123C88 */
+    --blue-3: 212 55% 35%;  /* #1E55A5 */
+    --blue-4: 212 50% 45%;  /* #2F69BC */
+    --blue-5: 212 45% 55%;  /* #4A80D8 */
+
+    --gold-1: 42 85% 55%;   /* #D4AA1F */
+    --gold-2: 45 90% 65%;   /* #D9CCA7 */
+    --gold-3: 48 85% 75%;   /* #E3D9BC */
+    --gold-4: 0 0% 78%;     /* #C1C3C8 */
+
+    /* Chart colors - Blue & Gold variations */
+    --chart-1: 212 70% 18%;   /* #082B6F - Deep Blue */
+    --chart-2: 42 85% 55%;    /* #D4AA1F - Gold */
+    --chart-3: 212 60% 25%;   /* #123C88 - Medium Blue */
+    --chart-4: 45 90% 65%;    /* #D9CCA7 - Light Gold */
+    --chart-5: 212 55% 35%;   /* #1E55A5 - Light Blue */
+    --chart-6: 48 85% 75%;    /* #E3D9BC - Very Light Gold */
+
+    /* Muted */
+    --muted: 210 25% 93%;
+    --muted-foreground: 215 15% 45%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 25% 88%;
+    --input: 214 25% 88%;
+    --ring: 215 70% 25%;
+
+    --radius: 0.5rem;
+
+    /* Flashcard accent colors */
+    --flashcard-red: 0 75% 55%;
+    --flashcard-green: 145 65% 45%;
+    --flashcard-cyan: 185 70% 50%;
+    --flashcard-yellow: 45 95% 55%;
+    --flashcard-orange: 25 95% 55%;
+    --flashcard-purple: 270 60% 55%;
+
+    /* Sidebar */
+    --sidebar-background: 215 70% 25%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 42 85% 55%;
+    --sidebar-primary-foreground: 215 25% 15%;
+    --sidebar-accent: 215 60% 35%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 215 50% 35%;
+    --sidebar-ring: 42 85% 55%;
+
+    /* Hero gradient */
+    --hero-gradient: linear-gradient(135deg, hsl(215 75% 18%) 0%, hsl(215 70% 25%) 50%, hsl(215 60% 35%) 100%);
+
+    /* Gold gradient */
+    --gold-gradient: linear-gradient(90deg, hsl(40 80% 45%) 0%, hsl(42 85% 55%) 50%, hsl(45 90% 65%) 100%);
+  }
+
+  .dark {
+    --background: 215 30% 10%;
+    --foreground: 210 20% 98%;
+
+    --card: 215 30% 14%;
+    --card-foreground: 210 20% 98%;
+
+    --popover: 215 30% 14%;
+    --popover-foreground: 210 20% 98%;
+
+    --primary: 42 85% 55%;
+    --primary-foreground: 215 25% 15%;
+    --primary-light: 45 90% 65%;
+    --primary-dark: 40 80% 45%;
+
+    --secondary: 215 25% 20%;
+    --secondary-foreground: 210 20% 98%;
+
+    --accent: 215 60% 45%;
+    --accent-foreground: 210 20% 98%;
+
+    --muted: 215 25% 18%;
+    --muted-foreground: 215 15% 65%;
+
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 215 25% 22%;
+    --input: 215 25% 22%;
+    --ring: 42 85% 55%;
+
+    --sidebar-background: 215 35% 12%;
+    --sidebar-foreground: 210 20% 98%;
+    --sidebar-primary: 42 85% 55%;
+    --sidebar-primary-foreground: 215 25% 15%;
+    --sidebar-accent: 215 30% 18%;
+    --sidebar-accent-foreground: 210 20% 98%;
+    --sidebar-border: 215 25% 22%;
+    --sidebar-ring: 42 85% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Titillium Web', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Titillium Web', sans-serif;
+    font-weight: 600;
+  }
+}
+
+@layer components {
+  .hero-gradient {
+    background: var(--hero-gradient);
+  }
+
+  .gold-gradient {
+    background: var(--gold-gradient);
+  }
+
+  .gold-text {
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .flashcard-border-red {
+    border-left: 4px solid hsl(var(--flashcard-red));
+  }
+
+  .flashcard-border-green {
+    border-left: 4px solid hsl(var(--flashcard-green));
+  }
+
+  .flashcard-border-cyan {
+    border-left: 4px solid hsl(var(--flashcard-cyan));
+  }
+
+  .flashcard-border-yellow {
+    border-left: 4px solid hsl(var(--flashcard-yellow));
+  }
+
+  .flashcard-border-orange {
+    border-left: 4px solid hsl(var(--flashcard-orange));
+  }
+
+  .flashcard-border-purple {
+    border-left: 4px solid hsl(var(--flashcard-purple));
+  }
+
+  .flashcard-number-red {
+    color: hsl(var(--flashcard-red));
+  }
+
+  .flashcard-number-green {
+    color: hsl(var(--flashcard-green));
+  }
+
+  .flashcard-number-cyan {
+    color: hsl(var(--flashcard-cyan));
+  }
+
+  .flashcard-number-yellow {
+    color: hsl(var(--flashcard-yellow));
+  }
+
+  .flashcard-number-orange {
+    color: hsl(var(--flashcard-orange));
+  }
+
+  .flashcard-number-purple {
+    color: hsl(var(--flashcard-purple));
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.4s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .stagger-1 { animation-delay: 0.1s; }
+  .stagger-2 { animation-delay: 0.2s; }
+  .stagger-3 { animation-delay: 0.3s; }
+  .stagger-4 { animation-delay: 0.4s; }
+  .stagger-5 { animation-delay: 0.5s; }
+  .stagger-6 { animation-delay: 0.6s; }
+}
