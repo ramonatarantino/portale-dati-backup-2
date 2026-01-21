@@ -3,17 +3,20 @@ import Home from "@/pages/Home";
 import Dashboard from "@/pages/Dashboard";
 import Numeridag from "@/pages/Numeridag";
 import Index from "@/pages/Index";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/numeridag" element={<Numeridag />} />
-        <Route path="/index" element={<Index />} />
-      </Routes>
-    </BrowserRouter>
+    <TooltipProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/numeridag" element={<Numeridag />} />
+          <Route path="/index" element={<Index />} />
+        </Routes>
+      </BrowserRouter>
+    </TooltipProvider>
   );
 };
 

@@ -30,7 +30,7 @@ const Footer = () => {
               </li>
               <li>
                 <a href="#numeri" className="text-sm text-primary-foreground/80 hover:text-gold transition-colors">
-                  Numeri MEF
+                  Numeri DAG
                 </a>
               </li>
               <li>

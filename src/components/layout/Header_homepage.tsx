@@ -1,7 +1,8 @@
-import { Search, Menu, X } from "lucide-react";
+import { Search, Menu, X, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -56,16 +57,33 @@ const Header = () => {
               )}
               Home
             </a>
-            <a href="/dashboard" className={`relative text-sm font-medium transition-colors ${
-              isActive('/dashboard') 
-                ? 'text-primary' 
-                : 'text-foreground hover:text-primary'
-            }`}>
-              {isActive('/dashboard') && (
-                <div className="absolute -top-1 left-0 right-0 h-0.5 bg-primary rounded-full"></div>
-              )}
-              Open Data
-            </a>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className={`relative text-sm font-medium transition-colors ${
+                  isActive('/dashboard') 
+                    ? 'text-primary' 
+                    : 'text-foreground'
+                } hover:bg-transparent`}>
+                  {isActive('/dashboard') && (
+                    <div className="absolute -top-1 left-0 right-0 h-0.5 bg-primary rounded-full"></div>
+                  )}
+                  Open Data
+                  <ChevronDown className="ml-1 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-64">
+                <DropdownMenuItem asChild>
+                  <a href="/dashboard" className="flex items-center w-full px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer">
+                    Dati stipendiali NoiPa
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a href="/dashboard" className="flex items-center w-full px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer">
+                    Spesa Pensioni MEF
+                  </a>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <a href="/numeridag" className={`relative text-sm font-medium transition-colors ${
               isActive('/numeridag') 
                 ? 'text-primary' 
@@ -79,9 +97,7 @@ const Header = () => {
             <a href="#news" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
               News
             </a>
-            <Button variant="default" size="sm" className="bg-primary hover:bg-primary-dark shadow-primary">
-              Accedi
-            </Button>
+          
           </nav>
 
           {/* Mobile Menu Button */}

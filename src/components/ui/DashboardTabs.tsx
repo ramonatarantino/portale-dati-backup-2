@@ -7,8 +7,8 @@ import { Badge } from "@/components/ui/badge";
 const dashboards = [
   {
     id: "opendata",
-    title: "Open Data",
-    description: "Accedi al portale completo degli Open Data della Pubblica Amministrazione",
+    title: "Dati stipendiali NoiPa",
+    description: `Con gli open data NoiPA ogni cittadino ha accesso a strumenti che consentono la navigazione ed elaborazione dei Dataset in formato Linked Open DataLinked Open Data (LOD), ad oggi lo standard tecnologico più avanzato per il trattamento delle banche dati online. I dati aperti riguardano le informazioni del personale delle Pubbliche Amministrazioni gestite nel sistema NoiPA, quali il numero di amministrati suddivisi per comune di residenza e unità organizzativa, le modalità di accredito degli stipendi, l'andamento delle tipologie contrattuali.`,
     icon: Database,
     color: "from-blue-900 to-blue-300",
     features: ["150+ Dataset", "Aggiornamenti mensili", "Export CSV/JSON", "API pubbliche"],
@@ -16,8 +16,8 @@ const dashboards = [
   },
   {
     id: "numeri",
-    title: "Numeri DAG",
-    description: "Esplora le statistiche e i numeri del sistema NoiPA in tempo reale",
+    title: "Spesa Pensioni MEF",
+    description: `Per dati statistici spesa pensioni possono essere scaricati, ricercati e visualizzati, i dati relativi ai trattamenti pensionistici (diretti, indiretti e una tantum), sostenuti dalla Pubblica Amministrazione per: Pensioni di guerra, Pensioni tabellari militari, Assegni (perseguitati politici, campi di sterminio, valore militare, medaglie), Indennizzi (vittime del terrorismo, danni vaccinazioni, trasfusioni).`,
     icon: BarChart3,
     color: "from-gold-dark to-gold-light",
     features: ["Statistiche real-time", "Report personalizzati", "Confronti storici", "Indicatori KPI"],
@@ -34,10 +34,11 @@ const DashboardTabs = () => {
             Portali Interattivi
           </Badge>
           <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-4">
-            Esplora i dati in modo intelligente
+            DAG – open data
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Consulta analisi interattive e percorsi di esplorazione pensati per valorizzare i dati della pubblica amministrazione.
+            Il Dipartimento dell'Amministrazione Generale, del Personale e dei Servizi (DAG) ha reso disponibili una serie di banche dati in formato aperto relativi alla gestione del personale e ai trattamenti pensionistici della Pubblica Amministrazione.
+            I dati, corredati da una serie di istruzioni per la consultazione dei file, sono disponibili nella sezione OPEN DATA ai seguenti indirizzi.
           </p>
         </div>
 
@@ -45,7 +46,7 @@ const DashboardTabs = () => {
           {dashboards.map((dashboard) => (
             <Card
               key={dashboard.id}
-              className="group relative overflow-hidden border-border hover:border-primary/50 transition-all hover:shadow-xl cursor-pointer"
+              className="group relative overflow-hidden border-border hover:border-primary/50 transition-all hover:shadow-xl cursor-pointer flex flex-col h-full"
             >
               <div className={`absolute inset-0 bg-gradient-to-br ${dashboard.color} opacity-5 group-hover:opacity-10 transition-opacity`} />
               
@@ -56,12 +57,12 @@ const DashboardTabs = () => {
                 <CardTitle className="text-2xl group-hover:text-primary transition-colors">
                   {dashboard.title}
                 </CardTitle>
-                <CardDescription className="text-base">
+                <CardDescription className="text-base whitespace-pre-line">
                   {dashboard.description}
                 </CardDescription>
               </CardHeader>
               
-              <CardContent className="relative">
+              <CardContent className="relative mt-auto">
                 <div className="flex flex-wrap gap-2 mb-6">
                   {dashboard.features.map((feature) => (
                     <Badge key={feature} variant="secondary" className="bg-secondary/50">

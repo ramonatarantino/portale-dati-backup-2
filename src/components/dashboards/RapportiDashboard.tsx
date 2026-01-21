@@ -75,10 +75,10 @@ const Index = () => {
   const internalTabs = [
     { id: 'assunzioni' as DataMode, name: 'Assunzioni', icon: TrendingUp },
     { id: 'cessazioni' as DataMode, name: 'Cessazioni', icon: TrendingUp },
-    { id: 'inquadramento_eta' as DataMode, name: 'Età/Genere', icon: Users },
-    { id: 'inquadramento' as DataMode, name: 'Inquadramento', icon: Briefcase },
+    { id: 'inquadramento_eta' as DataMode, name: 'Inquadramento Contrattuale', icon: Users },
+    { id: 'inquadramento' as DataMode, name: 'Inquadramento Amministrati', icon: Briefcase },
   ];
-
+ 
   // Get multiplier for current period
   const periodMultiplier = useMemo(() => {
     if (!selectedYear || !selectedMonth) return 1.0;

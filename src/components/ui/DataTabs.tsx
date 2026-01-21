@@ -96,7 +96,7 @@ const DataTabs = () => {
                 className="flex items-center gap-2 px-3 py-1.5 text-sm md:text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-primary rounded-lg transition-all"
               >
                 <Database className="h-4 w-4" />
-                Open Data
+                Dati stipendiali NoiPa
               </TabsTrigger>
               <TabsTrigger
                 value="numeri"
@@ -104,7 +104,7 @@ const DataTabs = () => {
                 className="flex items-center gap-2 px-3 py-1.5 text-sm md:text-base data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-primary rounded-lg transition-all"
               >
                 <BarChart3 className="h-4 w-4" />
-                Numeri DAG
+                Spesa Pensioni MEF
               </TabsTrigger>
             </TabsList>
           </div>
@@ -112,7 +112,7 @@ const DataTabs = () => {
           <TabsContent value="opendata" className="mt-0 focus-visible:outline-none">
             <div className="max-w-2xl mx-auto text-center mb-8">
               <h2 className="text-lg md:text-2xl font-bold text-foreground mb-4">
-                Open Data
+                Dati stipendiali NoiPa
               </h2>
               <p className="text-muted-foreground text-lg mb-6">
                 Per garantire l'attuazione dei principi basilari dell'open government, 
@@ -141,7 +141,7 @@ const DataTabs = () => {
           <TabsContent value="numeri" className="mt-0 focus-visible:outline-none">
             <div className="max-w-3xl mx-auto text-center mb-6">
               <h2 className="text-lg md:text-2xl font-bold text-foreground mb-4">
-                Numeri DAG
+                Spesa Pensioni MEF
               </h2>
               <p className="text-muted-foreground text-lg mb-6">
                 Per offrire a tutti i cittadini, al di là delle competenze specifiche, 

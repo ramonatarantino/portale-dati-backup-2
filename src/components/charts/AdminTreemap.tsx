@@ -72,7 +72,7 @@ export function AdminTreemap({ data, maxItems = 10 }: AdminTreemapProps) {
           </div>
         </div>
         <p className="text-sm text-muted-foreground">
-          Distribuzione per ente ({processedData.length} amministrazioni)
+          Distribuzione per amministrazione ({processedData.length} amministrazioni)
         </p>
       </div>
 
