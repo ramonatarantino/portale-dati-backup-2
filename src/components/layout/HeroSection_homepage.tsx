@@ -1,54 +1,39 @@
-import { Search, Database, Users, FileText, X } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useState, useMemo } from "react";
-
-const searchableData = [
-  { type: "dataset", title: "Stipendi medi per settore", category: "Open Data" },
-  { type: "dataset", title: "Distribuzione geografica dipendenti", category: "Open Data" },
-  { type: "dataset", title: "Contratti per tipologia", category: "Open Data" },
-  { type: "statistica", title: "Numero totale amministrati", category: "Numeri DAG" },
-  { type: "statistica", title: "Erogazioni mensili", category: "Numeri DAG" },
-  { type: "report", title: "Report trimestrale Q4 2024", category: "Report" },
-  { type: "report", title: "Analisi spesa pubblica 2024", category: "Report" },
-  { type: "dataset", title: "Età media dipendenti PA", category: "Open Data" },
-  { type: "statistica", title: "Puntualità pagamenti", category: "Numeri DAG" },
-  { type: "dataset", title: "Turnover personale", category: "Open Data" },
-];
+import { useState, useEffect } from "react";
 
 const HeroSection = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [parallaxOffset, setParallaxOffset] = useState(0);
 
-  const searchResults = useMemo(() => {
-    if (!searchQuery.trim()) return [];
-    const query = searchQuery.toLowerCase();
-    return searchableData.filter(
-      (item) =>
-        item.title.toLowerCase().includes(query) ||
-        item.category.toLowerCase().includes(query) ||
-        item.type.toLowerCase().includes(query)
-    );
-  }, [searchQuery]);
+  useEffect(() => {
+    let ticking = false;
 
-  const stats = [
-    { icon: Database, label: "Dataset Disponibili", value: "150+" },
-    { icon: Users, label: "Amministrati", value: "2.4M+" },
-    { icon: FileText, label: "Report Mensili", value: "1.200+" },
-  ];
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setParallaxOffset(window.scrollY || 0);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
 
-  const handleSearchClick = (result: typeof searchableData[0]) => {
-    console.log("Navigating to:", result);
-    setSearchQuery("");
-    setIsSearchFocused(false);
-  };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <section className="relative hero-gradient py-16 md:py-24 overflow-hidden">
+    <section id="hero-section" className="relative hero-gradient py-16 md:py-24 pb-32 md:pb-40 overflow-hidden">
       {/* Decorative elements */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
+        <div
+          className="hero-data-layer absolute inset-0"
+          style={{ transform: `translateY(${parallaxOffset * -0.06}px) scale(1.05)` }}
+        />
         <div className="absolute top-20 left-10 w-64 h-64 bg-gold/10 rounded-full blur-3xl" />
         <div className="absolute bottom-10 right-20 w-96 h-96 bg-primary-light/10 rounded-full blur-3xl" />
+        <div
+          className="hero-data-gradient absolute inset-x-0 bottom-0 h-48"
+          style={{ transform: `translateY(${parallaxOffset * 0.12}px)` }}
+        />
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
@@ -71,88 +56,6 @@ const HeroSection = () => {
             Scopri i dati della Pubblica Amministrazione.
           </p>
 
-          {/* Search Bar */}
-          <div className="max-w-2xl mx-auto mb-12 animate-slide-up stagger-2 relative">
-            <div className="flex gap-2 p-2 bg-card/95 backdrop-blur rounded-xl shadow-lg">
-              <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Cerca dataset, statistiche, report..."
-                  className="pl-12 pr-10 h-12 border-0 bg-transparent focus-visible:ring-0 text-base"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => setIsSearchFocused(true)}
-                  onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
-              <Button 
-                size="lg" 
-                className="h-12 px-8 bg-primary hover:bg-primary-dark shadow-primary transition-all hover:shadow-lg"
-              >
-                Cerca
-              </Button>
-            </div>
-
-            {/* Search Results Dropdown */}
-            {isSearchFocused && searchQuery && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-card rounded-xl shadow-xl border border-border overflow-hidden z-50">
-                {searchResults.length > 0 ? (
-                  <ul className="divide-y divide-border">
-                    {searchResults.map((result, index) => (
-                      <li
-                        key={index}
-                        className="px-4 py-3 hover:bg-secondary/50 cursor-pointer transition-colors"
-                        onClick={() => handleSearchClick(result)}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                            {result.type === "dataset" && <Database className="h-4 w-4 text-primary" />}
-                            {result.type === "statistica" && <Users className="h-4 w-4 text-gold" />}
-                            {result.type === "report" && <FileText className="h-4 w-4 text-primary" />}
-                          </div>
-                          <div className="flex-1 text-left">
-                            <p className="text-sm font-medium text-foreground">{result.title}</p>
-                            <p className="text-xs text-muted-foreground">{result.category}</p>
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div className="px-4 py-8 text-center text-muted-foreground">
-                    <p>Nessun risultato per "{searchQuery}"</p>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Quick Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            {stats.map((stat, index) => (
-              <div
-                key={stat.label}
-                className={`flex items-center justify-center gap-4 p-4 bg-card/10 backdrop-blur-sm rounded-xl border border-primary-foreground/10 animate-scale-in stagger-${index + 3}`}
-              >
-                <div className="w-12 h-12 bg-gold/20 rounded-lg flex items-center justify-center">
-                  <stat.icon className="h-6 w-6 text-gold-light" />
-                </div>
-                <div className="text-left">
-                  <p className="text-2xl font-bold text-primary-foreground">{stat.value}</p>
-                  <p className="text-sm text-primary-foreground/70">{stat.label}</p>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 

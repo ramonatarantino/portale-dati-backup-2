@@ -8,7 +8,7 @@ const dashboards = [
   {
     id: "opendata",
     title: "Dati stipendiali NoiPa",
-    description: `Con gli open data NoiPA ogni cittadino ha accesso a strumenti che consentono la navigazione ed elaborazione dei Dataset in formato Linked Open DataLinked Open Data (LOD), ad oggi lo standard tecnologico più avanzato per il trattamento delle banche dati online. I dati aperti riguardano le informazioni del personale delle Pubbliche Amministrazioni gestite nel sistema NoiPA, quali il numero di amministrati suddivisi per comune di residenza e unità organizzativa, le modalità di accredito degli stipendi, l'andamento delle tipologie contrattuali.`,
+    description: `Gli open data NoiPA permettono di esplorare i dati del personale della Pubblica Amministrazione, come distribuzione territoriale, modalità di pagamento e tipologie contrattuali, tramite standard avanzati di Linked Open Data.`,
     icon: Database,
     color: "from-blue-900 to-blue-300",
     features: ["150+ Dataset", "Aggiornamenti mensili", "Export CSV/JSON", "API pubbliche"],
@@ -17,7 +17,7 @@ const dashboards = [
   {
     id: "numeri",
     title: "Spesa Pensioni MEF",
-    description: `Per dati statistici spesa pensioni possono essere scaricati, ricercati e visualizzati, i dati relativi ai trattamenti pensionistici (diretti, indiretti e una tantum), sostenuti dalla Pubblica Amministrazione per: Pensioni di guerra, Pensioni tabellari militari, Assegni (perseguitati politici, campi di sterminio, valore militare, medaglie), Indennizzi (vittime del terrorismo, danni vaccinazioni, trasfusioni).`,
+    description: `I dati sulla spesa pensionistica consentono di consultare e analizzare le informazioni sui trattamenti pensionistici erogati dalla Pubblica Amministrazione, incluse pensioni, assegni e indennizzi per diverse categorie di beneficiari.`,
     icon: BarChart3,
     color: "from-gold-dark to-gold-light",
     features: ["Statistiche real-time", "Report personalizzati", "Confronti storici", "Indicatori KPI"],

@@ -52,6 +52,8 @@
     --chart-4: 45 90% 65%;    /* #D9CCA7 - Light Gold */
     --chart-5: 212 55% 35%;   /* #1E55A5 - Light Blue */
     --chart-6: 48 85% 75%;    /* #E3D9BC - Very Light Gold */
+    --navy: 212 70% 18%;      /* Helper color for AutoTutorial charts */
+    --amber: 42 85% 55%;      /* Helper color for AutoTutorial charts */
 
     /* Muted */
     --muted: 210 25% 93%;
@@ -130,6 +132,8 @@
     --sidebar-accent-foreground: 210 20% 98%;
     --sidebar-border: 215 25% 22%;
     --sidebar-ring: 42 85% 55%;
+    --navy: 212 65% 60%;
+    --amber: 42 80% 60%;
   }
 }
 
@@ -264,4 +268,95 @@
   .stagger-4 { animation-delay: 0.4s; }
   .stagger-5 { animation-delay: 0.5s; }
   .stagger-6 { animation-delay: 0.6s; }
+
+  .hero-data-layer {
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.18), transparent 55%),
+      radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.12), transparent 50%),
+      linear-gradient(120deg, rgba(255, 255, 255, 0.12) 0%, transparent 45%),
+      linear-gradient(300deg, rgba(255, 255, 255, 0.08) 0%, transparent 60%),
+      linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 420px 420px, 320px 320px, 220px 220px, 280px 280px, 140px 140px, 140px 140px;
+    mix-blend-mode: screen;
+    opacity: 0.25;
+  }
+
+  .hero-data-gradient {
+    background: linear-gradient(180deg, rgba(3, 8, 24, 0) 0%, rgba(3, 8, 24, 0.65) 60%, rgba(3, 8, 24, 0.95) 100%);
+  }
+
+  .animate-data-float {
+    animation: dataFloat 18s ease-in-out infinite;
+  }
+
+  .animate-data-glow {
+    animation: dataGlow 3.5s ease-in-out infinite;
+  }
+
+  .animate-data-ticker {
+    animation: dataTicker 40s linear infinite;
+  }
+
+  .reveal-section {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    will-change: opacity, transform;
+  }
+
+  .reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @keyframes dataFloat {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(0, -16px, 0) scale(1.02);
+    }
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+
+  @keyframes dataGlow {
+    0% {
+      opacity: 0.65;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+    50% {
+      opacity: 1;
+      text-shadow: 0 0 14px rgba(255, 255, 255, 0.45);
+    }
+    100% {
+      opacity: 0.65;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  @keyframes dataTicker {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-data-float,
+  .animate-data-glow,
+  .animate-data-ticker {
+    animation: none !important;
+  }
+
+  .reveal-section {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
 }
