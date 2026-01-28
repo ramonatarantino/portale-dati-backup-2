@@ -8,6 +8,10 @@ import Footer from "@/components/layout/Footer_homepage";
 import { Database, Eye, Share2, Zap } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AutoTutorial } from "@/components/AutoTutorial/AutoTutorial";
+import { AppleCardSection } from "@/components/AppleCard/AppleCardSection";
+import { DataSection } from "@/components/DataSection/DataSection";
+
+
 
 const Home = () => {
   const revealRefs = useRef<(HTMLElement | null)[]>([]);
@@ -52,6 +56,14 @@ const Home = () => {
       <main>
         {/* 1. Hero: cosa è il portale e CTA principali */}
         <HeroSection />
+
+        <div className="min-h-screen bg-background">
+          <AppleCardSection />
+        </div>
+
+        <main className="min-h-screen bg-background">
+          <DataSection />
+        </main>
 
         {/* 2. Sezione educativa sugli Open Data + tutorial */}
         <section
