@@ -86,7 +86,7 @@ const DataTabs = () => {
   const [activeTab, setActiveTab] = useState("opendata");
 
   return (
-    <section id="opendata" className="py-8 md:py-12 bg-background">
+    <section id="opendata" className="pt-12 md:pt-16 pb-8 md:pb-12 bg-background backdrop-blur-sm">
       <div className="max-w-5xl mx-auto px-4">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <div className="flex flex-col items-center mb-6">

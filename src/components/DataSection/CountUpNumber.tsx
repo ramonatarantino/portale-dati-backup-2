@@ -34,20 +34,20 @@ export function CountUpNumber({ value, unit, description, subtitle }: CountUpNum
       }`}
     >
       <div className="flex items-baseline gap-2">
-        <span className="text-7xl font-light tracking-tight text-foreground tabular-nums">
+        <span className="text-7xl font-light tracking-tight text-white tabular-nums">
           {shouldAnimate ? formattedCount : "0"}
         </span>
         {unit && (
-          <span className="text-2xl font-light text-muted-foreground">
+          <span className="text-2xl font-light text-gray-200">
             {unit}
           </span>
         )}
       </div>
-      <p className="mt-4 text-lg text-muted-foreground max-w-xs leading-relaxed">
+      <p className="mt-4 text-lg text-gray-200 max-w-xs leading-relaxed">
         {description}
       </p>
       {subtitle && (
-        <p className="mt-2 text-sm font-medium text-apple-blue uppercase tracking-wider">
+        <p className="mt-2 text-sm font-medium text-yellow-400 uppercase tracking-wider">
           {subtitle}
         </p>
       )}

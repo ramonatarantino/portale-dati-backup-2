@@ -8,6 +8,9 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isHeroVisible, setIsHeroVisible] = useState(true);
+  const [isBlueSectionVisible, setIsBlueSectionVisible] = useState(false);
+  const [isDataSectionVisible, setIsDataSectionVisible] = useState(false);
+  const [isAppleCardsVisible, setIsAppleCardsVisible] = useState(false);
 
   // Determine active page
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
@@ -20,9 +23,13 @@ const Header = () => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const heroSection = document.getElementById('hero-section');
-    if (!heroSection) return;
+    const blueSection = document.getElementById('tematiche-section');
+    const dataSection = document.getElementById('data-section');
+    const appleCardsSection = document.getElementById('apple-cards-section');
+    
+    if (!heroSection || !blueSection) return;
 
-    const observer = new IntersectionObserver(
+    const heroObserver = new IntersectionObserver(
       ([entry]) => {
         setIsHeroVisible(entry.intersectionRatio > 0.1);
       },
@@ -32,39 +39,80 @@ const Header = () => {
       }
     );
 
-    observer.observe(heroSection);
-    return () => observer.disconnect();
+    const blueObserver = new IntersectionObserver(
+      ([entry]) => {
+        setIsBlueSectionVisible(entry.intersectionRatio > 0.1);
+      },
+      {
+        threshold: [0, 0.1, 0.2],
+        rootMargin: '-80px 0px 0px 0px',
+      }
+    );
+
+    const dataObserver = new IntersectionObserver(
+      ([entry]) => {
+        setIsDataSectionVisible(entry.intersectionRatio > 0.1);
+      },
+      {
+        threshold: [0, 0.1, 0.2],
+        rootMargin: '-80px 0px 0px 0px',
+      }
+    );
+
+    const appleCardsObserver = new IntersectionObserver(
+      ([entry]) => {
+        setIsAppleCardsVisible(entry.intersectionRatio > 0.1);
+      },
+      {
+        threshold: [0, 0.1, 0.2],
+        rootMargin: '-80px 0px 0px 0px',
+      }
+    );
+
+    heroObserver.observe(heroSection);
+    blueObserver.observe(blueSection);
+    dataObserver.observe(dataSection);
+    appleCardsObserver.observe(appleCardsSection);
+    
+    return () => {
+      heroObserver.disconnect();
+      blueObserver.disconnect();
+      dataObserver.disconnect();
+      appleCardsObserver.disconnect();
+    };
   }, []);
 
-  const headerColorClasses = isHeroVisible
+  const shouldBeWhite = (isBlueSectionVisible || isDataSectionVisible) && !isAppleCardsVisible;
+
+  const headerColorClasses = shouldBeWhite
     ? 'bg-white/90 text-primary border-white/60 shadow-sm'
     : 'bg-primary/95 text-white border-primary-dark/50 shadow-lg';
 
-  const iconColor = isHeroVisible ? 'text-primary/60' : 'text-white/70';
+  const iconColor = shouldBeWhite ? 'text-primary/60' : 'text-white/70';
 
   const getNavLinkClasses = (path: string) => {
     const active = isActive(path);
-    if (isHeroVisible) {
+    if (shouldBeWhite) {
       return `relative text-sm font-medium transition-colors ${active ? 'text-primary' : 'text-primary/70 hover:text-primary'}`;
     }
     return `relative text-sm font-medium transition-colors ${active ? 'text-white' : 'text-white/80 hover:text-white'}`;
   };
 
-  const activeIndicatorClass = isHeroVisible ? 'bg-primary' : 'bg-white';
+  const activeIndicatorClass = shouldBeWhite ? 'bg-primary' : 'bg-white';
 
-  const logoSrc = isHeroVisible ? '/opendagblu.png' : '/opendagbianco.png';
+  const logoSrc = shouldBeWhite ? '/opendagblu.png' : '/opendagbianco.png';
 
-  const desktopSearchClasses = isHeroVisible
+  const desktopSearchClasses = shouldBeWhite
     ? 'pl-10 pr-4 h-11 bg-secondary/50 border-border focus:border-primary focus:ring-primary/20'
     : 'pl-10 pr-4 h-11 bg-white/10 text-white placeholder:text-white/70 border-white/30 focus:border-white focus:ring-white/30';
 
-  const mobileSearchClasses = isHeroVisible
+  const mobileSearchClasses = shouldBeWhite
     ? 'pl-10 pr-4 bg-secondary/50'
     : 'pl-10 pr-4 bg-white/10 text-white placeholder:text-white/70';
 
   const mobileLinkClasses = (path: string) => {
     const active = isActive(path);
-    if (isHeroVisible) {
+    if (shouldBeWhite) {
       return `relative py-2 text-sm font-medium transition-colors ${active ? 'text-primary' : 'text-primary/70 hover:text-primary'}`;
     }
     return `relative py-2 text-sm font-medium transition-colors ${active ? 'text-white' : 'text-white/80 hover:text-white'}`;
@@ -106,8 +154,8 @@ const Header = () => {
               Home
             </a>
 
-            <a href="#cosa-e-opendag" className={getNavLinkClasses('#cosa-e-opendag')}>
-              {isActive('#cosa-e-opendag') && (
+            <a href="/cosa-e-opendag" className={getNavLinkClasses('/cosa-e-opendag')}>
+              {isActive('/cosa-e-opendag') && (
                 <div className={`absolute -top-1 left-0 right-0 h-0.5 rounded-full ${activeIndicatorClass}`}></div>
               )}
               Cos'è OpenDag
@@ -141,7 +189,7 @@ const Header = () => {
               </DropdownMenuContent>
             </DropdownMenu>
             
-            <a href="#news" className={isHeroVisible ? 'text-sm font-medium text-primary/70 hover:text-primary transition-colors' : 'text-sm font-medium text-white/80 hover:text-white transition-colors'}>
+            <a href="#news" className={shouldBeWhite ? 'text-sm font-medium text-primary/70 hover:text-primary transition-colors' : 'text-sm font-medium text-white/80 hover:text-white transition-colors'}>
               News
             </a>
           
@@ -149,7 +197,7 @@ const Header = () => {
 
           {/* Mobile Menu Button */}
           <button
-            className={`md:hidden p-2 transition-colors ${isHeroVisible ? 'text-primary hover:text-primary/80' : 'text-white hover:text-white/80'}`}
+            className={`md:hidden p-2 transition-colors ${shouldBeWhite ? 'text-primary hover:text-primary/80' : 'text-white hover:text-white/80'}`}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -170,8 +218,8 @@ const Header = () => {
               />
             </div>
             <nav className="flex flex-col gap-3">
-              <a href="#cosa-e-opendag" className={mobileLinkClasses('#cosa-e-opendag')}>
-                {isActive('#cosa-e-opendag') && (
+              <a href="/cosa-e-opendag" className={mobileLinkClasses('/cosa-e-opendag')}>
+                {isActive('/cosa-e-opendag') && (
                   <div className={`absolute -top-1 left-0 right-0 h-0.5 rounded-full ${activeIndicatorClass}`}></div>
                 )}
                 Cos'è OpenDag
@@ -188,13 +236,13 @@ const Header = () => {
                 )}
                 Home
               </a>
-              <a href="#news" className={isHeroVisible ? 'py-2 text-sm font-medium text-primary/70 hover:text-primary transition-colors' : 'py-2 text-sm font-medium text-white/80 hover:text-white transition-colors'}>
+              <a href="#news" className={shouldBeWhite ? 'py-2 text-sm font-medium text-primary/70 hover:text-primary transition-colors' : 'py-2 text-sm font-medium text-white/80 hover:text-white transition-colors'}>
                 News
               </a>
               <Button
                 variant="default"
                 size="sm"
-                className={`w-full mt-2 ${isHeroVisible ? 'bg-primary hover:bg-primary-dark' : 'bg-white text-primary hover:bg-white/90'}`}
+                className={`w-full mt-2 ${shouldBeWhite ? 'bg-primary hover:bg-primary-dark' : 'bg-white text-primary hover:bg-white/90'}`}
               >
                 Accedi
               </Button>

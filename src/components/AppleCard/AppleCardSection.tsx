@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
-import { Layers, Users, Building } from "lucide-react";
+import { Layers, Users } from "lucide-react";
 import { AppleCard } from "./AppleCard";
 
 const cardsData = [
@@ -60,39 +60,6 @@ const cardsData = [
       </div>
     ),
   },
-  {
-    icon: Building,
-    label: "Istituzioni",
-    question: "Quali amministrazioni?",
-    pattern: "grid" as const,
-    content: (
-      <div className="space-y-4">
-        <p>Le amministrazioni coinvolte includono:</p>
-        <div className="grid grid-cols-1 gap-2">
-          {[
-            "Ministero dell'Economia e delle Finanze",
-            "Ministero dell'Interno",
-            "Ministero della Difesa",
-            "Ministero della Giustizia",
-            "Ministero dell'Istruzione e del Merito",
-          ].map((ministry, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 + idx * 0.06, duration: 0.3 }}
-              className="text-sm py-1.5"
-            >
-              {ministry}
-            </motion.div>
-          ))}
-        </div>
-        <p className="text-sm text-muted-foreground/70 italic">
-          E altre amministrazioni nel perimetro NoiPA.
-        </p>
-      </div>
-    ),
-  },
 ];
 
 export const AppleCardSection = () => {
@@ -111,16 +78,9 @@ export const AppleCardSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative py-24 md:py-32 px-5 md:px-8 overflow-hidden bg-subtle-gradient"
+      className="relative pt-8 md:pt-12 pb-8 md:pb-12 px-0 overflow-hidden"
     >
-      {/* Subtle background gradient */}
-      <motion.div
-        style={{ y }}
-        className="absolute inset-0 pointer-events-none"
-      >
-        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full bg-primary/[0.02] blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full bg-primary/[0.015] blur-3xl" />
-      </motion.div>
+      {/* Subtle background gradient - removed for side-by-side layout */}
 
       <motion.div style={{ opacity }} className="max-w-6xl mx-auto relative z-10">
         {/* Header */}
@@ -128,7 +88,7 @@ export const AppleCardSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
-          className="text-center mb-16 md:mb-20"
+          className="text-center mb-8 md:mb-10"
         >
           <motion.p
             className="text-sm font-medium text-primary mb-3 tracking-wide"
@@ -173,7 +133,7 @@ export const AppleCardSection = () => {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="text-center text-sm text-muted-foreground mt-12"
         >
-          Passa il mouse su una card per esplorare
+          Clicca su una card per esplorare
         </motion.p>
       </motion.div>
     </section>

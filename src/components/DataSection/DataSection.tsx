@@ -126,8 +126,8 @@ export function DataSection() {
 
   if (isLoading) {
     return (
-      <section className="min-h-screen flex items-center justify-center bg-background">
-        <div className="w-8 h-8 border-2 border-apple-blue border-t-transparent rounded-full animate-spin" />
+      <section className="min-h-screen flex items-center justify-center bg-primary">
+        <div className="w-8 h-8 border-2 border-yellow-400 border-t-transparent rounded-full animate-spin" />
       </section>
     );
   }
@@ -137,7 +137,7 @@ export function DataSection() {
   }
 
   return (
-    <section className="min-h-screen bg-background py-24 px-8">
+    <section className="bg-primary text-white pt-16 pb-12 px-8">
       <div className="max-w-7xl mx-auto">
         {/* Tab Navigation */}
         <DataSectionTabs

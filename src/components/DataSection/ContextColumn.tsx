@@ -16,14 +16,14 @@ export function ContextColumn({ title, question, description }: ContextColumnPro
         isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
       }`}
     >
-      <h2 className="text-4xl font-semibold text-foreground leading-tight mb-6">
+      <h2 className="text-4xl font-semibold text-white leading-tight mb-6">
         {title}
       </h2>
-      <p className="text-xl text-apple-blue font-light leading-relaxed mb-4">
+      <p className="text-xl text-yellow-400 font-light leading-relaxed mb-4">
         "{question}"
       </p>
       {description && (
-        <p className="text-base text-muted-foreground leading-relaxed max-w-md">
+        <p className="text-base text-gray-200 leading-relaxed max-w-md">
           {description}
         </p>
       )}

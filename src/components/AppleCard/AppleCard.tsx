@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { ReactNode, useRef } from "react";
 import { LucideIcon } from "lucide-react";
 
@@ -28,26 +28,6 @@ export const AppleCard = ({
   pattern,
 }: AppleCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const rotateX = useTransform(mouseY, [-100, 100], [2, -2]);
-  const rotateY = useTransform(mouseX, [-100, 100], [-2, 2]);
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!cardRef.current || isOtherActive) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    mouseX.set(e.clientX - centerX);
-    mouseY.set(e.clientY - centerY);
-  };
-
-  const handleMouseLeave = () => {
-    mouseX.set(0);
-    mouseY.set(0);
-    onDeactivate();
-  };
 
   const patternClass = {
     dots: "pattern-dots",
@@ -55,11 +35,19 @@ export const AppleCard = ({
     grid: "pattern-grid",
   }[pattern];
 
+  const handleClick = () => {
+    if (isActive) {
+      onDeactivate();
+    } else {
+      onActivate();
+    }
+  };
+
   return (
     <motion.div
       ref={cardRef}
       layout
-      className="relative cursor-pointer perspective-1000"
+      className="relative cursor-pointer"
       style={{
         flex: isActive ? 2.2 : isOtherActive ? 0.5 : 1,
       }}
@@ -71,10 +59,7 @@ export const AppleCard = ({
         ease: [0.25, 0.1, 0.25, 1],
         layout: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] },
       }}
-      onMouseEnter={onActivate}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      onClick={isActive ? onDeactivate : onActivate}
+      onClick={handleClick}
     >
       <motion.div
         className={`
@@ -83,11 +68,6 @@ export const AppleCard = ({
           ${isActive ? 'shadow-apple-active' : 'shadow-apple'}
           ${isOtherActive ? 'opacity-60' : 'opacity-100'}
         `}
-        style={{
-          rotateX: isActive ? 0 : rotateX,
-          rotateY: isActive ? 0 : rotateY,
-          transformStyle: "preserve-3d",
-        }}
         animate={{
           scale: isActive ? 1.02 : isOtherActive ? 0.98 : 1,
         }}

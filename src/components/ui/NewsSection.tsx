@@ -70,7 +70,7 @@ const NewsSection = () => {
   );
 
   return (
-    <section id="news" className="py-16 md:py-24 bg-secondary/30">
+    <section id="news" className="py-16 md:py-24 bg-secondary backdrop-blur-sm">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">

@@ -1,20 +1,38 @@
 import { useCallback, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import Header from "@/components/layout/Header_homepage";
 import HeroSection from "@/components/layout/HeroSection_homepage";
 import NewsSection from "@/components/ui/NewsSection";
 import DataTabs from "@/components/ui/DataTabs";
-import DashboardTabs from "@/components/ui/DashboardTabs";
 import Footer from "@/components/layout/Footer_homepage";
-import { Database, Eye, Share2, Zap } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { AutoTutorial } from "@/components/AutoTutorial/AutoTutorial";
 import { AppleCardSection } from "@/components/AppleCard/AppleCardSection";
 import { DataSection } from "@/components/DataSection/DataSection";
-
+import ScrollStackMotion from '@/components/charts/ScrollStackMotion';
+import { ScrollSection } from "@/components/ui/ScrollSection";
+import { ServiziSection } from "@/components/ui/ServiziSection"
 
 
 const Home = () => {
   const revealRefs = useRef<(HTMLElement | null)[]>([]);
+
+  const scrollStackCards = [
+    {
+      title: "Analisi Avanzate",
+      description: "Esplora dati dettagliati e approfondimenti avanzati sui temi OpenDAG"
+    },
+    {
+      title: "Dashboard Interattive",
+      description: "Visualizza i dati attraverso grafici dinamici e dashboard personalizzabili"
+    },
+    {
+      title: "Rapporti Tematici",
+      description: "Accedi a rapporti dettagliati organizzati per area tematica"
+    },
+    {
+      title: "Dati in Tempo Reale",
+      description: "Monitora gli aggiornamenti e le novità in tempo reale"
+    }
+  ];
 
   const registerRevealRef = useCallback((index: number) => (node: HTMLElement | null) => {
     revealRefs.current[index] = node;
@@ -55,156 +73,69 @@ const Home = () => {
 
       <main>
         {/* 1. Hero: cosa è il portale e CTA principali */}
-        <HeroSection />
+        <ScrollSection id="hero-section" sticky={false}>
+          <HeroSection />
+        </ScrollSection>
 
-        <div className="min-h-screen bg-background">
-          <AppleCardSection />
-        </div>
-
-        <main className="min-h-screen bg-background">
-          <DataSection />
-        </main>
-
-        {/* 2. Sezione educativa sugli Open Data + tutorial */}
-        <section
-          ref={registerRevealRef(0)}
-          className="reveal-section py-16 md:py-24 bg-secondary/30"
-        >
+        <ScrollSection id="apple-cards-section" className="py-16 md:py-24">
           <div className="container mx-auto px-4">
-            <TooltipProvider>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
-                {/* Colonna sinistra: spiegazione Open Data */}
-                <div className="text-left">
-                  <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6 animate-fade-in">
-                    Cosa sono gli Open Data?
-                  </h2>
-                  <div className="flex flex-wrap md:flex-nowrap justify-start items-center gap-4 mb-6">
-                    <div className="group relative">
-                      <Database className="h-10 w-10 md:h-12 md:w-12 text-primary animate-bounce" />
-                      <div className="absolute -top-2 -right-2 w-3 h-3 md:w-4 md:h-4 bg-primary rounded-full animate-ping opacity-75"></div>
-                    </div>
-                    <div className="group relative">
-                      <Eye className="h-10 w-10 md:h-12 md:w-12 text-primary animate-pulse" />
-                      <div className="absolute -top-2 -right-2 w-3 h-3 md:w-4 md:h-4 bg-primary rounded-full animate-ping opacity-75"></div>
-                    </div>
-                    <div className="group relative">
-                      <Share2 className="h-10 w-10 md:h-12 md:w-12 text-primary animate-bounce" style={{ animationDelay: '0.5s' }} />
-                      <div className="absolute -top-2 -right-2 w-3 h-3 md:w-4 md:h-4 bg-primary rounded-full animate-ping opacity-75"></div>
-                    </div>
-                    <div className="group relative">
-                      <Zap className="h-10 w-10 md:h-12 md:w-12 text-primary animate-pulse" style={{ animationDelay: '1s' }} />
-                      <div className="absolute -top-2 -right-2 w-3 h-3 md:w-4 md:h-4 bg-primary rounded-full animate-ping opacity-75"></div>
-                    </div>
-                  </div>
-                  <div className="animate-fade-in">
-                    <p className="text-muted-foreground text-lg max-w-xl leading-relaxed">
-                      Il Ministero dell'Economia e delle Finanze è impegnato a realizzare obiettivi di{' '}
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <span className="text-primary font-semibold animate-pulse cursor-help">trasparenza</span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>La trasparenza amministrativa garantisce l'accesso pubblico alle informazioni e ai processi decisionali.</p>
-                        </TooltipContent>
-                      </Tooltip>{' '}
-                      e condivisione del suo patrimonio informativo attraverso la pubblicazione di{' '}
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <span className="text-primary font-semibold animate-pulse cursor-help">Open Data</span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Dati pubblici liberamente accessibili, utilizzabili e ridistribuibili da chiunque.</p>
-                        </TooltipContent>
-                      </Tooltip>
-                      . Gli Open Data sono informazioni e dati pubblici resi disponibili in formato digitale non proprietario, senza{' '}
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <span className="text-primary font-semibold animate-pulse cursor-help">copyright</span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Diritti esclusivi di sfruttamento di un'opera intellettuale.</p>
-                        </TooltipContent>
-                      </Tooltip>
-                      ,{' '}
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <span className="text-primary font-semibold animate-pulse cursor-help">brevetti</span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Diritti esclusivi di sfruttamento di un'invenzione tecnica.</p>
-                        </TooltipContent>
-                      </Tooltip>{' '}
-                      o altri limiti all'
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <span className="text-primary font-semibold animate-pulse cursor-help">utilizzo</span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Possibilità di usare, modificare e distribuire i dati liberamente.</p>
-                        </TooltipContent>
-                      </Tooltip>{' '}
-                      ed alla riproduzione.
-                    </p>
-                    <div className="mt-8 space-y-8">
-                      <div>
-                        <h3 className="text-xl font-semibold text-foreground mb-2">
-                          <a
-                            href="/dashboard"
-                            className="text-primary hover:underline"
-                          >
-                            Dati stipendiali NoiPa
-                          </a>
-                        </h3>
-                        <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
-                          Con gli open data NoiPA ogni cittadino ha accesso a strumenti che consentono la navigazione ed elaborazione dei Dataset in formato Linked Open Data (LOD), ad oggi lo standard tecnologico più avanzato per il trattamento delle banche dati online. I dati aperti riguardano le informazioni del personale delle Pubbliche Amministrazioni gestite nel sistema NoiPA, quali il numero di amministrati suddivisi per comune di residenza e unità organizzativa, le modalità di accredito degli stipendi, l'andamento delle tipologie contrattuali.
-                        </p>
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-semibold text-foreground mb-2">
-                          <a
-                            href="/numeridag"
-                            className="text-primary hover:underline"
-                          >
-                            Spesa Pensioni MEF
-                          </a>
-                        </h3>
-                        <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
-                          Per dati statistici sulla spesa pensionistica possono essere scaricati, ricercati e visualizzati i dati relativi ai trattamenti pensionistici (diretti, indiretti e una tantum) sostenuti dalla Pubblica Amministrazione per: pensioni di guerra, pensioni tabellari militari, assegni (perseguitati politici, campi di sterminio, valore militare, medaglie), indennizzi (vittime del terrorismo, danni da vaccinazioni, trasfusioni).
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Colonna destra: tab/tutorial sul funzionamento del portale */}
-                <div className="bg-card border border-border rounded-xl shadow-sm p-4 md:p-6 animate-fade-in">
-                  <h3 className="text-lg md:text-xl font-semibold text-foreground mb-3">
-                    Come usare questo portale
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Segui il tutorial interattivo per capire rapidamente dove trovare i dati e come navigare tra le sezioni.
-                  </p>
-                  <AutoTutorial />
-                </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+              {/* Colonna sinistra: Apple Cards */}
+              <div className="space-y-8">
+                <AppleCardSection />
               </div>
-            </TooltipProvider>
+              
+              {/* Colonna destra: Servizi al Cittadino */}
+              <div>
+                <ServiziSection />
+              </div>
+            </div>
           </div>
-        </section>
+        </ScrollSection>
+        
 
-        {/* 3. Cosa puoi fare nel portale (riuso DataTabs come sezione funzionale) */}
-        <section ref={registerRevealRef(1)} className="reveal-section py-12">
+        {/* Titolo sezione tematiche */}
+        <ScrollSection id="tematiche-section" className="pt-16 md:pt-20 pb-8 md:pb-12 bg-primary">
+          <div className="container mx-auto px-4 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+              className="max-w-4xl mx-auto"
+            >
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 animate-fade-in">
+                Le <span className="text-yellow-400 animate-pulse">Tematiche</span> di{" "}
+                <span className="text-white font-extrabold">OpenDAG</span>
+              </h2>
+              <p className="text-lg md:text-xl text-gray-200 leading-relaxed max-w-3xl mx-auto animate-slide-up">
+                <span className="font-semibold text-yellow-400">Approfondisci</span> i contenuti presenti nel portale{" "}
+                <span className="text-white font-semibold animate-pulse">OpenDAG</span> organizzati per{" "}
+                <span className="font-semibold text-yellow-400">area tematica</span>; ognuna di queste può essere{" "}
+                <span className="font-semibold text-white">esplorata</span> in funzione delle esigenze{" "}
+                <span className="font-semibold text-yellow-400">informative</span>, sia{" "}
+                <span className="font-semibold text-white">generali</span> che di{" "}
+                <span className="font-semibold text-yellow-400">dettaglio</span>, per garantirti un'esperienza di navigazione{" "}
+                <span className="font-semibold text-white animate-pulse">adeguata</span> ai tuoi{" "}
+                <span className="font-semibold text-yellow-400">interessi</span>.
+              </p>
+            </motion.div>
+          </div>
+        </ScrollSection>
+        
+        <ScrollSection id="data-section" disableEffects={true}>
+          <DataSection />
+        </ScrollSection>
+
+        {/* 2. Cosa puoi fare nel portale (riuso DataTabs come sezione funzionale) */}
+        <ScrollSection id="data-tabs-section" sticky={false}>
           <DataTabs />
-        </section>
+        </ScrollSection>
+        
 
-        {/* 4. Accesso rapido alle due aree principali di Open Data */}
-        <section ref={registerRevealRef(2)} className="reveal-section py-12">
-          <DashboardTabs />
-        </section>
-
-        {/* 5. News e aggiornamenti */}
-        <section ref={registerRevealRef(3)} className="reveal-section py-12">
+        {/* 3. News e aggiornamenti
+        <ScrollSection id="news-section" className="reveal-section py-12 " sticky={false}>
           <NewsSection />
-        </section>
+        </ScrollSection> */}
       </main>
 
       <Footer />
